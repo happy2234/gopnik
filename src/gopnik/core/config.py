@@ -1,10 +1,10 @@
-"""Configuration management for Gopnik."""
+"""Configuration management for Gopnik - Python 3.11 Compatible."""
 
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings, Field
 
 
 class Config(BaseSettings):
@@ -21,9 +21,32 @@ class Config(BaseSettings):
     MODELS_DIR: Path = PROJECT_ROOT / "models"
     LOGS_DIR: Path = PROJECT_ROOT / "logs"
 
-    # OCR Settings
-    TESSERACT_CMD: str = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    # OCR Settings - Windows specific
+    TESSERACT_CMD: Optional[str] = Field(
+        default=None, description="Path to tesseract executable"
+    )
     OCR_LANGUAGES: str = "eng+hin+ben+tel+tam+guj+mar"
+
+    # Auto-detect Tesseract installation
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.TESSERACT_CMD is None:
+            self.TESSERACT_CMD = self._find_tesseract()
+
+    def _find_tesseract(self) -> str:
+        """Auto-detect Tesseract installation on Windows."""
+        possible_paths = [
+            r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+            r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+            r"C:\ProgramData\chocolatey\bin\tesseract.exe",
+            "tesseract",  # If in PATH
+        ]
+
+        for path in possible_paths:
+            if Path(path).exists() or path == "tesseract":
+                return path
+
+        return r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Default
 
     # Model Settings
     DEFAULT_BATCH_SIZE: int = 8
