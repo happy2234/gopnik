@@ -1,0 +1,207 @@
+name: Update Desktop Version
+
+on:
+  push:
+    paths:
+      - 'src/gopnik/interfaces/desktop/**'
+      - 'desktop/**'
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Desktop Version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  update-desktop-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+    - name: Update desktop version
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        
+        # Update version in web interface
+        if [ -f "src/gopnik/interfaces/web/templates/welcome.html" ]; then
+          sed -i "s/Desktop v[0-9]\+\.[0-9]\+\.[0-9]\+/Desktop v$VERSION/g" src/gopnik/interfaces/web/templates/welcome.html
+        fi
+        
+        # Update version in README
+        sed -i "s/Desktop v[0-9]\+\.[0-9]\+\.[0-9]\+/Desktop v$VERSION/g" README.md
+        
+        # Update version configuration
+        if [ -f "config/versions.yaml" ]; then
+          sed -i "s/desktop_version: [0-9]\+\.[0-9]\+\.[0-9]\+/desktop_version: $VERSION/g" config/versions.yaml
+        else
+          mkdir -p config
+          echo "cli_version: 0.1.0" > config/versions.yaml
+          echo "web_version: 0.1.0" >> config/versions.yaml
+          echo "desktop_version: $VERSION" >> config/versions.yaml
+        fi
+
+    - name: Update version info module
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        
+        if [ -f "src/gopnik/version/__init__.py" ]; then
+          sed -i "s/DESKTOP_VERSION = \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DESKTOP_VERSION = \"$VERSION\"/g" src/gopnik/version/__init__.py
+        else
+          mkdir -p src/gopnik/version
+          cat > src/gopnik/version/__init__.py << EOF
+        """Version information for Gopnik components."""
+        
+        CLI_VERSION = "0.1.0"  # Will be updated by CLI workflow
+        WEB_VERSION = "0.1.0"  # Will be updated by web workflow
+        DESKTOP_VERSION = "$VERSION"
+        API_VERSION = "v1"
+        
+        def get_version_info():
+            return {
+                "cli": CLI_VERSION,
+                "web": WEB_VERSION,
+                "desktop": DESKTOP_VERSION,
+                "api": API_VERSION
+            }
+        EOF
+        fi
+
+    - name: Update desktop app metadata
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        
+        # Create or update desktop app metadata
+        mkdir -p config
+        cat > config/desktop_status.json << EOF
+        {
+          "version": "$VERSION",
+          "last_updated": "${{ steps.date.outputs.date }}",
+          "status": "development",
+          "platforms": ["Windows", "macOS", "Linux"],
+          "download_urls": {
+            "windows": "https://github.com/happy2234/gopnik/releases/download/desktop-v$VERSION/gopnik-desktop-$VERSION-windows.exe",
+            "macos": "https://github.com/happy2234/gopnik/releases/download/desktop-v$VERSION/gopnik-desktop-$VERSION-macos.dmg",
+            "linux": "https://github.com/happy2234/gopnik/releases/download/desktop-v$VERSION/gopnik-desktop-$VERSION-linux.AppImage"
+          },
+          "features": [
+            "Native desktop application",
+            "Offline processing",
+            "Batch document processing",
+            "Advanced configuration options"
+          ]
+        }
+        EOF
+
+    - name: Create desktop installer metadata
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        
+        # Create installer configuration
+        mkdir -p desktop/installer
+        cat > desktop/installer/config.json << EOF
+        {
+          "app_name": "Gopnik Desktop",
+          "version": "$VERSION",
+          "description": "AI-powered document deidentification toolkit",
+          "author": "Gopnik Development Team",
+          "license": "MIT",
+          "homepage": "https://github.com/happy2234/gopnik",
+          "main_executable": "gopnik-desktop",
+          "install_size": "150MB",
+          "requirements": {
+            "os": ["Windows 10+", "macOS 10.15+", "Ubuntu 18.04+"],
+            "memory": "4GB RAM",
+            "storage": "200MB free space"
+          }
+        }
+        EOF
+
+    - name: Commit changes
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff --staged --quiet || git commit -m "chore: update Desktop version to $VERSION
+
+        - Updated version references in welcome page
+        - Updated README with new desktop version
+        - Updated version info module
+        - Updated desktop app metadata and installer config
+        
+        [skip ci]"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+
+    - name: Build desktop packages
+      if: github.event.inputs.version
+      run: |
+        echo "🏗️ Building Desktop v${{ github.event.inputs.version }} packages"
+        echo "This would trigger desktop app builds for Windows, macOS, and Linux"
+        # Add actual build commands here when desktop app is ready
+
+    - name: Create release tag
+      if: github.event.inputs.version
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        git tag -a "desktop-v$VERSION" -m "Desktop Release v$VERSION"
+        git push origin "desktop-v$VERSION"
+
+    - name: Create GitHub Release
+      if: github.event.inputs.version
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: desktop-v${{ github.event.inputs.version }}
+        release_name: Desktop v${{ github.event.inputs.version }}
+        body: |
+          ## Gopnik Desktop v${{ github.event.inputs.version }}
+          
+          ### 💻 Download
+          - **Windows**: [gopnik-desktop-${{ github.event.inputs.version }}-windows.exe](https://github.com/happy2234/gopnik/releases/download/desktop-v${{ github.event.inputs.version }}/gopnik-desktop-${{ github.event.inputs.version }}-windows.exe)
+          - **macOS**: [gopnik-desktop-${{ github.event.inputs.version }}-macos.dmg](https://github.com/happy2234/gopnik/releases/download/desktop-v${{ github.event.inputs.version }}/gopnik-desktop-${{ github.event.inputs.version }}-macos.dmg)
+          - **Linux**: [gopnik-desktop-${{ github.event.inputs.version }}-linux.AppImage](https://github.com/happy2234/gopnik/releases/download/desktop-v${{ github.event.inputs.version }}/gopnik-desktop-${{ github.event.inputs.version }}-linux.AppImage)
+          
+          ### ✨ Features
+          - Native desktop application
+          - Offline processing capabilities
+          - Batch document processing
+          - Advanced configuration options
+          
+          ### 📋 System Requirements
+          - **OS**: Windows 10+, macOS 10.15+, or Ubuntu 18.04+
+          - **Memory**: 4GB RAM minimum
+          - **Storage**: 200MB free space
+          
+          ### 🔧 Changes
+          - Automated release from desktop app updates
+          - See commit history for detailed changes
+          
+        draft: false
+        prerelease: false

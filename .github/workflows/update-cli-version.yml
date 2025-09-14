@@ -1,0 +1,142 @@
+name: Update CLI Version
+
+on:
+  push:
+    paths:
+      - 'src/gopnik/interfaces/cli/**'
+      - 'src/gopnik/core/**'
+      - 'setup.py'
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'CLI Version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  update-cli-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+
+    - name: Extract version from setup.py
+      id: get_version
+      run: |
+        VERSION=$(python -c "import setup; print(setup.version)" 2>/dev/null || echo "0.1.0")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Update CLI version in welcome page
+      run: |
+        VERSION="${{ github.event.inputs.version || steps.get_version.outputs.version }}"
+        
+        # Update version in web interface templates (when they exist)
+        if [ -f "src/gopnik/interfaces/web/templates/welcome.html" ]; then
+          sed -i "s/CLI Version: [0-9]\+\.[0-9]\+\.[0-9]\+/CLI Version: $VERSION/g" src/gopnik/interfaces/web/templates/welcome.html
+        fi
+        
+        # Update version in README
+        sed -i "s/CLI v[0-9]\+\.[0-9]\+\.[0-9]\+/CLI v$VERSION/g" README.md
+        
+        # Update version in configuration
+        if [ -f "config/versions.yaml" ]; then
+          sed -i "s/cli_version: [0-9]\+\.[0-9]\+\.[0-9]\+/cli_version: $VERSION/g" config/versions.yaml
+        else
+          mkdir -p config
+          echo "cli_version: $VERSION" > config/versions.yaml
+          echo "web_version: 0.1.0" >> config/versions.yaml
+          echo "desktop_version: 0.1.0" >> config/versions.yaml
+        fi
+
+    - name: Create version info file
+      run: |
+        VERSION="${{ github.event.inputs.version || steps.get_version.outputs.version }}"
+        mkdir -p src/gopnik/version
+        cat > src/gopnik/version/__init__.py << EOF
+        """Version information for Gopnik components."""
+        
+        CLI_VERSION = "$VERSION"
+        WEB_VERSION = "0.1.0"  # Will be updated by web workflow
+        DESKTOP_VERSION = "0.1.0"  # Will be updated by desktop workflow
+        API_VERSION = "v1"
+        
+        def get_version_info():
+            return {
+                "cli": CLI_VERSION,
+                "web": WEB_VERSION,
+                "desktop": DESKTOP_VERSION,
+                "api": API_VERSION
+            }
+        EOF
+
+    - name: Commit changes
+      run: |
+        VERSION="${{ github.event.inputs.version || steps.get_version.outputs.version }}"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff --staged --quiet || git commit -m "chore: update CLI version to $VERSION
+
+        - Updated version references in welcome page
+        - Updated README with new CLI version
+        - Created version info module
+        - Updated configuration files
+        
+        [skip ci]"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+
+    - name: Create release tag
+      if: github.event.inputs.version
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        git tag -a "cli-v$VERSION" -m "CLI Release v$VERSION"
+        git push origin "cli-v$VERSION"
+
+    - name: Create GitHub Release
+      if: github.event.inputs.version
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: cli-v${{ github.event.inputs.version }}
+        release_name: CLI Release v${{ github.event.inputs.version }}
+        body: |
+          ## Gopnik CLI v${{ github.event.inputs.version }}
+          
+          ### Installation
+          ```bash
+          pip install gopnik==${{ github.event.inputs.version }}
+          ```
+          
+          ### Usage
+          ```bash
+          gopnik --help
+          ```
+          
+          ### Changes
+          - Automated release from CLI updates
+          - See commit history for detailed changes
+          
+        draft: false
+        prerelease: false
