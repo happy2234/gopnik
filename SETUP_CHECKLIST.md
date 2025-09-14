@@ -36,6 +36,7 @@ Complete this checklist to fully set up all the infrastructure for the Gopnik pr
   - [ ] Click "Run workflow" → "Run workflow"
   - [ ] Wait for completion
 - [ ] **Alternative**: Run `./scripts/setup-wiki.sh` for manual setup
+- [ ] **Force Sync**: Run `./scripts/force-wiki-sync.sh` to force-update wiki content
 - [ ] Verify at: https://github.com/happy2234/gopnik.wiki.git (Wiki is now live!)
 - [ ] Check troubleshooting guide if issues: `wiki/Wiki-Setup-Troubleshooting.md`
 

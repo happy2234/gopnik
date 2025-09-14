@@ -138,6 +138,29 @@ git push origin master
 2. Check that all pages are available
 3. Test internal links
 
+## 🔄 Force Wiki Sync
+
+If the automatic sync isn't working or you need to force-update the wiki content:
+
+### Using the Force Sync Script
+```bash
+# Run from repository root
+./scripts/force-wiki-sync.sh
+```
+
+**Features:**
+- ✅ Forces update of all wiki content
+- ✅ Overwrites any manual wiki edits
+- ✅ Works even when auto-sync fails
+- ✅ Provides detailed progress feedback
+- ✅ Handles authentication automatically
+
+**When to use:**
+- Auto-sync workflow fails
+- Wiki shows outdated content
+- Manual wiki edits need to be overwritten
+- Initial wiki setup issues
+
 ## 🤖 Automated Setup via GitHub Actions
 
 ### Triggering the Workflow
