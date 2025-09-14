@@ -1,0 +1,38 @@
+# Default redaction profile for Gopnik
+
+name: default
+description: Default redaction profile with common PII types enabled
+
+# Visual PII detection rules
+visual_rules:
+  face: true
+  signature: true
+  barcode: true
+  qr_code: true
+
+# Text PII detection rules  
+text_rules:
+  name: true
+  email: true
+  phone: true
+  address: true
+  ssn: true
+  id_number: true
+  credit_card: false
+  date_of_birth: false
+
+# Redaction appearance
+redaction_style: solid_black
+
+# Language support
+multilingual_support:
+  - en
+  - es
+  - fr
+  - de
+
+# Detection confidence threshold (0.0 to 1.0)
+confidence_threshold: 0.7
+
+# Custom rules for specific scenarios
+custom_rules: {}

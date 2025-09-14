@@ -1,0 +1,71 @@
+# Default configuration for Gopnik deidentification toolkit
+
+# Deployment mode: web_demo, cli_offline, api_server, desktop
+deployment_mode: cli_offline
+
+# General settings
+debug: false
+log_level: INFO
+
+# Data directories (will be created if they don't exist)
+# data_dir: ~/.gopnik  # Uncomment to override default
+# temp_dir: ~/.gopnik/temp  # Uncomment to override default
+
+# Web interface settings
+web_settings:
+  host: localhost
+  port: 8000
+  max_file_size_mb: 50
+  allowed_file_types: ['.pdf', '.png', '.jpg', '.jpeg']
+  session_timeout_minutes: 30
+  enable_cloudflare: false
+  rate_limit_requests_per_minute: 60
+  temp_file_cleanup_minutes: 60
+
+# CLI interface settings
+cli_settings:
+  default_profile: default
+  batch_size: 10
+  progress_bar: true
+  verbose_output: false
+  auto_cleanup: true
+  output_format: json  # json, yaml, text
+  color_output: true
+
+# API interface settings
+api_settings:
+  host: localhost
+  port: 8080
+  workers: 4
+  max_request_size_mb: 100
+  enable_docs: true
+  docs_url: /docs
+  api_key_required: false
+  rate_limit_requests_per_minute: 100
+  async_processing: true
+  webhook_timeout_seconds: 30
+
+# AI engine settings
+ai_engine_settings:
+  cv_model: yolov8
+  nlp_model: layoutlmv3
+  # model_cache_dir: ~/.gopnik/models  # Uncomment to override default
+  gpu_enabled: false
+  batch_processing: true
+  confidence_threshold: 0.7
+  max_detections_per_page: 100
+  model_download_timeout: 300
+
+# Security settings
+security_settings:
+  enable_encryption: true
+  encryption_algorithm: AES-256
+  hash_algorithm: SHA-256
+  signature_algorithm: RSA-2048
+  key_rotation_days: 90
+  audit_log_signing: true
+  secure_temp_files: true
+  memory_protection: true
+
+# Custom settings for specific deployments
+custom_settings: {}

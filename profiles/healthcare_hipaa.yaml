@@ -1,0 +1,40 @@
+# HIPAA-compliant redaction profile for healthcare documents
+
+name: healthcare_hipaa
+description: HIPAA compliant redaction profile for healthcare documents
+
+# Visual PII detection rules
+visual_rules:
+  face: true
+  signature: true
+  barcode: true
+  qr_code: true
+
+# Text PII detection rules (comprehensive for healthcare)
+text_rules:
+  name: true
+  email: true
+  phone: true
+  address: true
+  ssn: true
+  id_number: true
+  credit_card: true
+  date_of_birth: true
+
+# Redaction appearance
+redaction_style: solid_black
+
+# Language support
+multilingual_support:
+  - en
+  - es
+
+# Higher confidence threshold for healthcare compliance
+confidence_threshold: 0.8
+
+# Custom rules for healthcare-specific identifiers
+custom_rules:
+  medical_record_numbers: true
+  insurance_ids: true
+  provider_ids: true
+  prescription_numbers: true

@@ -1,0 +1,37 @@
+# Core dependencies for Gopnik deidentification toolkit
+
+# Configuration and data handling
+pyyaml>=6.0
+pydantic>=2.0
+
+# CLI interface
+click>=8.0
+colorama>=0.4.4
+tqdm>=4.64.0
+
+# Cryptography and security
+cryptography>=3.4.8
+
+# File and image processing
+pillow>=9.0.0
+
+# Optional dependencies (install as needed)
+# Web interface:
+# fastapi>=0.100.0
+# uvicorn>=0.20.0
+# python-multipart>=0.0.6
+# jinja2>=3.1.0
+
+# AI engines:
+# torch>=2.0.0
+# torchvision>=0.15.0
+# transformers>=4.30.0
+# opencv-python>=4.8.0
+# numpy>=1.24.0
+
+# Development:
+# pytest>=7.0.0
+# pytest-cov>=4.0.0
+# black>=23.0.0
+# flake8>=6.0.0
+# mypy>=1.0.0
