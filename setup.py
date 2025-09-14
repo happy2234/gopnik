@@ -20,7 +20,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Gopnik Development Team",
     author_email="dev@gopnik.ai",
-    url="https://github.com/gopnik/gopnik",
+    url="https://github.com/happy2234/gopnik",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     python_requires=">=3.8",
@@ -95,8 +95,8 @@ setup(
     ],
     keywords="pii deidentification redaction privacy ai forensic",
     project_urls={
-        "Bug Reports": "https://github.com/gopnik/gopnik/issues",
-        "Source": "https://github.com/gopnik/gopnik",
+        "Bug Reports": "https://github.com/happy2234/gopnik/issues",
+        "Source": "https://github.com/happy2234/gopnik",
         "Documentation": "https://gopnik.readthedocs.io/",
     },
 )

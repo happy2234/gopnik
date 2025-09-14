@@ -91,7 +91,7 @@ src/gopnik/
 
 ```bash
 # Clone repository
-git clone https://github.com/gopnik/gopnik.git
+git clone https://github.com/happy2234/gopnik.git
 cd gopnik
 
 # Install in development mode
@@ -116,5 +116,5 @@ Please read CONTRIBUTING.md for details on our code of conduct and the process f
 ## Support
 
 - Documentation: https://gopnik.readthedocs.io/
-- Issues: https://github.com/gopnik/gopnik/issues
-- Discussions: https://github.com/gopnik/gopnik/discussions
+- Issues: https://github.com/happy2234/gopnik/issues
+- Discussions: https://github.com/happy2234/gopnik/discussions
