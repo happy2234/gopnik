@@ -33,15 +33,15 @@ Complete this checklist to fully set up all the infrastructure for the Gopnik pr
 - [ ] Run: `./scripts/setup-wiki.sh` to upload content
 - [ ] Verify at: https://github.com/happy2234/gopnik/wiki
 
-### 2. **Set Up ReadTheDocs**
+### 2. **Set Up GitHub Pages Documentation**
 
-- [ ] Create account at: https://readthedocs.org/
-- [ ] Sign up with GitHub account
-- [ ] Import project: `https://github.com/happy2234/gopnik`
-- [ ] Configure build settings (auto-detected from `.readthedocs.yaml`)
-- [ ] Verify build succeeds
-- [ ] Check documentation at: https://gopnik.readthedocs.io/
-- [ ] See detailed guide: `scripts/setup-readthedocs.md`
+- [ ] Go to: https://github.com/happy2234/gopnik/settings/pages
+- [ ] Set source to "GitHub Actions"
+- [ ] Enable GitHub Pages
+- [ ] Trigger documentation build by pushing to main branch
+- [ ] Verify build succeeds in Actions tab
+- [ ] Check documentation at: https://happy2234.github.io/gopnik/
+- [ ] See workflow: `.github/workflows/deploy-docs.yml`
 
 ### 3. **Test Automated Workflows**
 
@@ -76,7 +76,7 @@ Complete this checklist to fully set up all the infrastructure for the Gopnik pr
 - [ ] Go to: https://github.com/happy2234/gopnik/settings
 - [ ] Set description: "AI-powered forensic-grade deidentification toolkit"
 - [ ] Add topics: `ai`, `privacy`, `deidentification`, `pii`, `redaction`, `python`
-- [ ] Set website: `https://gopnik.readthedocs.io/`
+- [ ] Set website: `https://happy2234.github.io/gopnik/`
 - [ ] Enable "Automatically delete head branches"
 
 ### 5. **Community Setup**
@@ -145,7 +145,7 @@ After completing setup, verify:
 ### Links Work
 - [ ] https://github.com/happy2234/gopnik/discussions
 - [ ] https://github.com/happy2234/gopnik/wiki  
-- [ ] https://gopnik.readthedocs.io/
+- [ ] https://happy2234.github.io/gopnik/
 - [ ] All internal documentation links
 
 ### Automation Works

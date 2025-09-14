@@ -97,6 +97,6 @@ setup(
     project_urls={
         "Bug Reports": "https://github.com/happy2234/gopnik/issues",
         "Source": "https://github.com/happy2234/gopnik",
-        "Documentation": "https://gopnik.readthedocs.io/",
+        "Documentation": "https://happy2234.github.io/gopnik/",
     },
 )

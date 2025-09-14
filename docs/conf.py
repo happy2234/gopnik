@@ -35,7 +35,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 html_theme_options = {
-    'canonical_url': 'https://gopnik.readthedocs.io/',
+    'canonical_url': 'https://happy2234.github.io/gopnik/',
     'analytics_id': '',  # Add Google Analytics ID if needed
     'logo_only': False,
     'display_version': True,

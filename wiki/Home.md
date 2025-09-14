@@ -59,12 +59,12 @@ This wiki is maintained by the community. Anyone can contribute by:
 
 - **[GitHub Discussions](https://github.com/happy2234/gopnik/discussions)**: Ask questions and get help
 - **[Issue Tracker](https://github.com/happy2234/gopnik/issues)**: Report bugs and request features
-- **[Documentation](https://gopnik.readthedocs.io/)**: Official documentation
+- **[Documentation](https://happy2234.github.io/gopnik/)**: Official documentation
 
 ## 🔗 Quick Links
 
 - **[Main Repository](https://github.com/happy2234/gopnik)**
-- **[Official Documentation](https://gopnik.readthedocs.io/)**
+- **[Official Documentation](https://happy2234.github.io/gopnik/)**
 - **[Release Notes](https://github.com/happy2234/gopnik/releases)**
 - **[Roadmap](Roadmap)**
 
