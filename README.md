@@ -142,8 +142,10 @@ Please read CONTRIBUTING.md for details on our code of conduct and the process f
 
 - 💬 **[GitHub Discussions](https://github.com/happy2234/gopnik/discussions)**: Community support and feature requests
 - 🐛 **[Issues](https://github.com/happy2234/gopnik/issues)**: Bug reports and feature requests
-- 📖 **[Wiki](https://github.com/happy2234/gopnik/wiki)**: Community-maintained documentation
+- 📖 **[Wiki](https://github.com/happy2234/gopnik/wiki)**: Community-maintained documentation (auto-setup available)
 - 📧 **Email**: support@gopnik.ai
+
+> 💡 **Wiki Setup**: Enable wiki in repository settings, then use our automated GitHub Actions workflow for instant setup!
 
 ## 📄 License
 
