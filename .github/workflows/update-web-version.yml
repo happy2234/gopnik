@@ -1,0 +1,170 @@
+name: Update Web Version
+
+on:
+  push:
+    paths:
+      - 'src/gopnik/interfaces/web/**'
+      - 'src/gopnik/interfaces/api/**'
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Web Version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  update-web-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+    - name: Update web version
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        
+        # Update version in web interface
+        if [ -f "src/gopnik/interfaces/web/templates/welcome.html" ]; then
+          sed -i "s/Web Demo v[0-9]\+\.[0-9]\+\.[0-9]\+/Web Demo v$VERSION/g" src/gopnik/interfaces/web/templates/welcome.html
+          sed -i "s/Last Updated: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Last Updated: ${{ steps.date.outputs.date }}/g" src/gopnik/interfaces/web/templates/welcome.html
+        fi
+        
+        # Update version in README
+        sed -i "s/Web Demo v[0-9]\+\.[0-9]\+\.[0-9]\+/Web Demo v$VERSION/g" README.md
+        
+        # Update version configuration
+        if [ -f "config/versions.yaml" ]; then
+          sed -i "s/web_version: [0-9]\+\.[0-9]\+\.[0-9]\+/web_version: $VERSION/g" config/versions.yaml
+        else
+          mkdir -p config
+          echo "cli_version: 0.1.0" > config/versions.yaml
+          echo "web_version: $VERSION" >> config/versions.yaml
+          echo "desktop_version: 0.1.0" >> config/versions.yaml
+        fi
+
+    - name: Update version info module
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        
+        if [ -f "src/gopnik/version/__init__.py" ]; then
+          sed -i "s/WEB_VERSION = \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/WEB_VERSION = \"$VERSION\"/g" src/gopnik/version/__init__.py
+        else
+          mkdir -p src/gopnik/version
+          cat > src/gopnik/version/__init__.py << EOF
+        """Version information for Gopnik components."""
+        
+        CLI_VERSION = "0.1.0"  # Will be updated by CLI workflow
+        WEB_VERSION = "$VERSION"
+        DESKTOP_VERSION = "0.1.0"  # Will be updated by desktop workflow
+        API_VERSION = "v1"
+        
+        def get_version_info():
+            return {
+                "cli": CLI_VERSION,
+                "web": WEB_VERSION,
+                "desktop": DESKTOP_VERSION,
+                "api": API_VERSION
+            }
+        EOF
+        fi
+
+    - name: Update web demo status
+      run: |
+        # Create or update web demo status file
+        mkdir -p config
+        cat > config/web_status.json << EOF
+        {
+          "version": "${{ github.event.inputs.version || '0.1.0' }}",
+          "last_updated": "${{ steps.date.outputs.date }}",
+          "status": "active",
+          "demo_url": "https://gopnik-demo.example.com",
+          "features": [
+            "Drag-and-drop file upload",
+            "Real-time processing status",
+            "Multiple redaction profiles",
+            "Instant download of results"
+          ]
+        }
+        EOF
+
+    - name: Commit changes
+      run: |
+        VERSION="${{ github.event.inputs.version || '0.1.0' }}"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff --staged --quiet || git commit -m "chore: update Web Demo version to $VERSION
+
+        - Updated version references in welcome page
+        - Updated README with new web demo version
+        - Updated version info module
+        - Updated web demo status and configuration
+        
+        [skip ci]"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+
+    - name: Deploy to demo environment
+      if: github.event.inputs.version
+      run: |
+        echo "🚀 Deploying Web Demo v${{ github.event.inputs.version }}"
+        echo "This would trigger deployment to demo environment"
+        # Add actual deployment commands here when demo environment is ready
+
+    - name: Create release tag
+      if: github.event.inputs.version
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        git tag -a "web-v$VERSION" -m "Web Demo Release v$VERSION"
+        git push origin "web-v$VERSION"
+
+    - name: Create GitHub Release
+      if: github.event.inputs.version
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: web-v${{ github.event.inputs.version }}
+        release_name: Web Demo v${{ github.event.inputs.version }}
+        body: |
+          ## Gopnik Web Demo v${{ github.event.inputs.version }}
+          
+          ### 🌐 Try the Demo
+          [Launch Web Demo](https://gopnik-demo.example.com)
+          
+          ### ✨ Features
+          - Drag-and-drop file upload
+          - Real-time processing status
+          - Multiple redaction profiles
+          - Instant download of results
+          
+          ### 🔧 Changes
+          - Automated release from web interface updates
+          - See commit history for detailed changes
+          
+        draft: false
+        prerelease: false
