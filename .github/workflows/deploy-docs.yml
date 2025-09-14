@@ -11,9 +11,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: "pages"
@@ -46,6 +47,11 @@ jobs:
     - name: Build Sphinx documentation
       run: |
         cd docs
+        
+        # Create _static directory if it doesn't exist
+        mkdir -p _static
+        
+        # Build documentation with verbose output
         make html
         
         # Copy built docs to _site for GitHub Pages
@@ -65,6 +71,46 @@ jobs:
         
         # Copy README as additional content
         cp README.md docs/_site/readme.md || true
+
+    - name: Update GitHub Wiki
+      run: |
+        echo "🔄 Updating GitHub Wiki..."
+        
+        # Clone wiki repository
+        git clone https://github.com/${{ github.repository }}.wiki.git wiki-repo || {
+          echo "⚠️ Wiki not enabled or accessible, skipping wiki update"
+          exit 0
+        }
+        
+        cd wiki-repo
+        
+        # Copy updated wiki content
+        for file in ../wiki/*.md; do
+          if [ -f "$file" ]; then
+            filename=$(basename "$file")
+            cp "$file" "$filename"
+            git add "$filename"
+            echo "✅ Updated $filename in wiki"
+          fi
+        done
+        
+        # Check if there are changes to commit
+        if ! git diff --staged --quiet; then
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git commit -m "📚 Auto-update wiki from documentation build
+          
+          Updated from main repository commit: ${{ github.sha }}
+          Triggered by documentation deployment"
+          
+          git push origin master
+          echo "🚀 Wiki updated successfully!"
+        else
+          echo "ℹ️ No wiki changes to commit"
+        fi
+        
+        cd ..
+        rm -rf wiki-repo
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3

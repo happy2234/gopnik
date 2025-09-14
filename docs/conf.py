@@ -35,7 +35,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 html_theme_options = {
-    'canonical_url': 'https://happy2234.github.io/gopnik/',
+    # 'canonical_url': 'https://happy2234.github.io/gopnik/',  # Deprecated option
     'analytics_id': '',  # Add Google Analytics ID if needed
     'logo_only': False,
     'display_version': True,
@@ -59,8 +59,8 @@ html_context = {
     "conf_py_path": "/docs/",
 }
 
-html_logo = '_static/logo.png'  # Add logo when available
-html_favicon = '_static/favicon.ico'  # Add favicon when available
+# html_logo = '_static/logo.png'  # Add logo when available
+# html_favicon = '_static/favicon.ico'  # Add favicon when available
 
 # -- Extension configuration -------------------------------------------------
 
@@ -97,12 +97,15 @@ myst_enable_extensions = [
     "dollarmath",
     "html_admonition",
     "html_image",
-    "linkify",
+    # "linkify",  # Disabled due to dependency issues
     "replacements",
     "smartquotes",
     "substitution",
     "tasklist",
 ]
+
+# Set base URL for GitHub Pages
+html_baseurl = 'https://happy2234.github.io/gopnik/'
 
 # Autodoc configuration
 autodoc_default_options = {
