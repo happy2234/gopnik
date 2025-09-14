@@ -7,7 +7,7 @@
 
 Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit that automatically detects and redacts Personally Identifiable Information (PII) from complex, visually-rich documents while preserving document structure and providing verifiable audit trails.
 
-🚀 **[Try the Web Demo](https://gopnik-demo.example.com)** | 📖 **[Documentation](https://gopnik.readthedocs.io/)** | 💬 **[Discussions](https://github.com/happy2234/gopnik/discussions)**
+🚀 **[Try the Web Demo](https://gopnik-demo.example.com)** | 📖 **[Documentation](https://happy2234.github.io/gopnik/)** | 💬 **[Discussions](https://github.com/happy2234/gopnik/discussions)**
 
 ## ✨ Features
 
@@ -133,10 +133,10 @@ Please read CONTRIBUTING.md for details on our code of conduct and the process f
 
 ## 📚 Documentation
 
-- **[User Guide](https://gopnik.readthedocs.io/en/latest/user-guide/)**: Complete user documentation
-- **[Developer Guide](https://gopnik.readthedocs.io/en/latest/developer-guide/)**: API reference and development docs
-- **[Tutorials](https://gopnik.readthedocs.io/en/latest/tutorials/)**: Step-by-step tutorials
-- **[FAQ](https://gopnik.readthedocs.io/en/latest/faq/)**: Frequently asked questions
+- **[User Guide](https://happy2234.github.io/gopnik/user-guide/)**: Complete user documentation
+- **[Developer Guide](https://happy2234.github.io/gopnik/developer-guide/)**: API reference and development docs
+- **[Tutorials](https://happy2234.github.io/gopnik/tutorials/)**: Step-by-step tutorials
+- **[FAQ](https://happy2234.github.io/gopnik/faq/)**: Frequently asked questions
 
 ## 🤝 Community & Support
 

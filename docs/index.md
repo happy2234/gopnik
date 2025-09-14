@@ -4,6 +4,8 @@ Welcome to the comprehensive documentation for Gopnik, the AI-powered forensic-g
 
 ## 📚 Documentation Sections
 
+**🌐 Live Documentation**: [https://happy2234.github.io/gopnik/](https://happy2234.github.io/gopnik/)
+
 ### For Users
 - **[User Guide](user-guide/index.md)**: Complete guide for using Gopnik
 - **[Installation](user-guide/installation.md)**: Installation instructions for all platforms

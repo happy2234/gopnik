@@ -298,7 +298,7 @@ Yes! Multiple service options:
 
 ### Where can I get support?
 
-- **Documentation**: [gopnik.readthedocs.io](https://gopnik.readthedocs.io/)
+- **Documentation**: [happy2234.github.io/gopnik](https://happy2234.github.io/gopnik/)
 - **Community**: [GitHub Discussions](https://github.com/happy2234/gopnik/discussions)
 - **Issues**: [GitHub Issues](https://github.com/happy2234/gopnik/issues)
 - **Wiki**: [GitHub Wiki](https://github.com/happy2234/gopnik/wiki)
