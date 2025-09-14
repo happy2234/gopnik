@@ -64,10 +64,46 @@ echo -e "${YELLOW}📝 Updating wiki content...${NC}"
 # Track changes
 CHANGES_MADE=false
 
-# Copy all wiki files from the main repository
+# Function to check if file should be ignored
+should_ignore_file() {
+    local filename="$1"
+    local gitignore_file="../wiki/.gitignore"
+    
+    # If no .gitignore exists, don't ignore anything
+    if [ ! -f "$gitignore_file" ]; then
+        return 1
+    fi
+    
+    # Check each pattern in .gitignore
+    while IFS= read -r pattern || [ -n "$pattern" ]; do
+        # Skip empty lines and comments
+        if [[ -z "$pattern" || "$pattern" =~ ^[[:space:]]*# ]]; then
+            continue
+        fi
+        
+        # Remove leading/trailing whitespace
+        pattern=$(echo "$pattern" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        
+        # Simple pattern matching (supports * wildcards)
+        if [[ "$filename" == $pattern ]]; then
+            return 0
+        fi
+    done < "$gitignore_file"
+    
+    return 1
+}
+
+# Copy all wiki files from the main repository (respecting .gitignore)
 for file in ../wiki/*.md; do
     if [ -f "$file" ]; then
         filename=$(basename "$file")
+        
+        # Check if file should be ignored
+        if should_ignore_file "$filename"; then
+            echo -e "${YELLOW}⏭️  Skipping $filename (ignored by .gitignore)${NC}"
+            continue
+        fi
+        
         echo -e "${BLUE}Processing $filename...${NC}"
         
         # Force update - always copy the file
