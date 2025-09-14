@@ -30,8 +30,14 @@ Complete this checklist to fully set up all the infrastructure for the Gopnik pr
 - [ ] In "Features" section
 - [ ] Check ☑️ "Wikis"
 - [ ] Save changes
-- [ ] Run: `./scripts/setup-wiki.sh` to upload content
+- [ ] **Automated Setup (Recommended)**:
+  - [ ] Go to: https://github.com/happy2234/gopnik/actions
+  - [ ] Find "Setup GitHub Wiki" workflow
+  - [ ] Click "Run workflow" → "Run workflow"
+  - [ ] Wait for completion
+- [ ] **Alternative**: Run `./scripts/setup-wiki.sh` for manual setup
 - [ ] Verify at: https://github.com/happy2234/gopnik/wiki
+- [ ] Check troubleshooting guide if issues: `wiki/Wiki-Setup-Troubleshooting.md`
 
 ### 2. **Set Up GitHub Pages Documentation**
 
