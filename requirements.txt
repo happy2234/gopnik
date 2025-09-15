@@ -14,6 +14,7 @@ cryptography>=3.4.8
 
 # File and image processing
 pillow>=9.0.0
+pymupdf>=1.23.0
 
 # Optional dependencies (install as needed)
 # Web interface:
