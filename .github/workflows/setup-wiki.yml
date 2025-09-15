@@ -24,7 +24,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT_TOKEN }}
 
     - name: Setup Git
       run: |
@@ -35,7 +35,7 @@ jobs:
       id: check_wiki
       run: |
         # Try to clone the wiki repository
-        if git clone https://github.com/${{ github.repository }}.wiki.git wiki-repo 2>/dev/null; then
+        if git clone https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo 2>/dev/null; then
           echo "wiki_exists=true" >> $GITHUB_OUTPUT
           echo "✅ Wiki repository exists and is accessible"
         else
@@ -250,6 +250,7 @@ jobs:
           - $(ls wiki-repo/*.md 2>/dev/null | wc -l) pages available
           - Auto-sync enabled via GitHub Actions"
           
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
           git push origin ${{ github.ref_name }}
         fi
 
