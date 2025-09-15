@@ -1,0 +1,38 @@
+# Include the README and license
+include README.md
+include LICENSE
+include DEVELOPMENT.md
+
+# Include configuration files
+include pyproject.toml
+include setup.py
+
+# Include documentation
+recursive-include docs *
+recursive-include wiki *
+
+# Include configuration and profiles
+recursive-include config *
+recursive-include profiles *
+
+# Include examples
+recursive-include examples *
+
+# Include scripts
+recursive-include scripts *
+
+# Exclude development and testing files
+exclude .gitignore
+exclude .readthedocs.yaml
+exclude *.md
+recursive-exclude tests *
+recursive-exclude .github *
+recursive-exclude .kiro *
+
+# Exclude cache and build files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude *.so
+global-exclude .DS_Store

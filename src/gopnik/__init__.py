@@ -5,7 +5,11 @@ An open-source system for automatically detecting and redacting PII from documen
 while preserving structure and providing verifiable audit trails.
 """
 
-__version__ = "0.1.0"
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "0.1.0"
+
 __author__ = "Gopnik Development Team"
 
 from .core import DocumentProcessor
@@ -17,5 +21,6 @@ __all__ = [
     "PIIDetection", 
     "ProcessingResult",
     "RedactionProfile",
-    "GopnikConfig"
+    "GopnikConfig",
+    "__version__"
 ]

@@ -1,0 +1,224 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 0.1.0)'
+        required: true
+        type: string
+      test_pypi:
+        description: 'Publish to Test PyPI first'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write  # For trusted publishing
+
+jobs:
+  build:
+    name: Build distribution packages
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for setuptools_scm
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine setuptools wheel setuptools_scm
+
+    - name: Update version if specified
+      if: github.event.inputs.version
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        echo "Updating version to $VERSION"
+        
+        # Update version in _version.py
+        echo "__version__ = \"$VERSION\"" > src/gopnik/_version.py
+        
+        # Update version in setup.py
+        sed -i "s/version = \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/version = \"$VERSION\"/g" setup.py
+
+    - name: Build source distribution and wheel
+      run: |
+        python -m build
+        
+        # List built packages
+        ls -la dist/
+
+    - name: Check distribution packages
+      run: |
+        python -m twine check dist/*
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist-packages
+        path: dist/
+
+  test-install:
+    name: Test installation
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+    
+    steps:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist-packages
+        path: dist/
+
+    - name: Install from wheel
+      run: |
+        pip install dist/*.whl
+
+    - name: Test CLI installation
+      run: |
+        gopnik --version
+        gopnik --help
+
+    - name: Test Python import
+      run: |
+        python -c "import gopnik; print(f'Gopnik version: {gopnik.__version__}')"
+        python -c "from gopnik import DocumentProcessor; print('Import successful')"
+
+  publish-test-pypi:
+    name: Publish to Test PyPI
+    needs: [build, test-install]
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_pypi == 'true' || github.event_name == 'workflow_dispatch'
+    environment:
+      name: test-pypi
+      url: https://test.pypi.org/p/gopnik
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist-packages
+        path: dist/
+
+    - name: Publish to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        username: __token__
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        verbose: true
+
+    - name: Test installation from Test PyPI
+      run: |
+        sleep 60  # Wait for package to be available
+        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ gopnik
+        gopnik --version
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: [build, test-install]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_pypi == 'false')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/gopnik
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist-packages
+        path: dist/
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        username: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        verbose: true
+
+    - name: Test installation from PyPI
+      run: |
+        sleep 120  # Wait for package to be available
+        pip install gopnik
+        gopnik --version
+
+  create-release:
+    name: Create GitHub Release
+    needs: [publish-pypi]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.version
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      with:
+        tag_name: v${{ github.event.inputs.version }}
+        release_name: Gopnik v${{ github.event.inputs.version }}
+        body: |
+          ## Gopnik v${{ github.event.inputs.version }}
+          
+          ### 🚀 Installation
+          ```bash
+          pip install gopnik
+          ```
+          
+          ### 📖 Quick Start
+          ```bash
+          # Process a document
+          gopnik process document.pdf --profile healthcare
+          
+          # Get help
+          gopnik --help
+          ```
+          
+          ### 🔗 Links
+          - **[Documentation](https://happy2234.github.io/gopnik/)**
+          - **[CLI Reference](https://happy2234.github.io/gopnik/user-guide/cli-reference/)**
+          - **[PyPI Package](https://pypi.org/project/gopnik/)**
+          - **[GitHub Repository](https://github.com/happy2234/gopnik)**
+          
+          ### 📋 What's New
+          - Full-featured CLI interface with comprehensive commands
+          - AI-powered PII detection and redaction
+          - Forensic-grade audit trails and integrity validation
+          - Support for multiple document formats (PDF, images)
+          - Batch processing capabilities
+          - Profile management system
+          - Extensive documentation and examples
+          
+          ### 🛠️ Features
+          - **CLI Commands**: `process`, `batch`, `validate`, `profile`
+          - **Output Formats**: Text and JSON for automation
+          - **Progress Tracking**: Progress bars for long operations
+          - **Error Handling**: Comprehensive error reporting
+          - **Security**: Cryptographic signatures and integrity validation
+          - **Compliance**: HIPAA, PCI DSS, and other regulatory support
+          
+          See the [CHANGELOG](https://github.com/happy2234/gopnik/releases) for detailed changes.
+        draft: false
+        prerelease: false

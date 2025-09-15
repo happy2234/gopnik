@@ -21,6 +21,7 @@ setup(
     author="Gopnik Development Team",
     author_email="dev@gopnik.ai",
     url="https://github.com/happy2234/gopnik",
+    download_url="https://github.com/happy2234/gopnik/archive/refs/tags/v0.1.0.tar.gz",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     python_requires=">=3.8",
