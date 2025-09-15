@@ -66,6 +66,9 @@ jobs:
             return 1
           fi
           
+          # Debug: show what we're checking
+          echo "🔍 Checking if $filename should be ignored..."
+          
           # Check each pattern in .gitignore
           while IFS= read -r pattern || [ -n "$pattern" ]; do
             # Skip empty lines and comments
@@ -76,12 +79,23 @@ jobs:
             # Remove leading/trailing whitespace
             pattern=$(echo "$pattern" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             
-            # Simple pattern matching (supports * wildcards)
-            if [[ "$filename" == $pattern ]]; then
-              return 0
+            # Skip empty patterns
+            if [[ -z "$pattern" ]]; then
+              continue
             fi
+            
+            echo "  📋 Checking pattern: '$pattern'"
+            
+            # Use case statement for better pattern matching
+            case "$filename" in
+              $pattern)
+                echo "  ✅ Match found: $filename matches $pattern"
+                return 0
+                ;;
+            esac
           done < "$gitignore_file"
           
+          echo "  ❌ No match found for $filename"
           return 1
         }
         

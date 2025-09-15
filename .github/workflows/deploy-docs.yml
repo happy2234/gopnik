@@ -104,10 +104,17 @@ jobs:
             # Remove leading/trailing whitespace
             pattern=$(echo "$pattern" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             
-            # Simple pattern matching (supports * wildcards)
-            if [[ "$filename" == $pattern ]]; then
-              return 0
+            # Skip empty patterns
+            if [[ -z "$pattern" ]]; then
+              continue
             fi
+            
+            # Use case statement for better pattern matching
+            case "$filename" in
+              $pattern)
+                return 0
+                ;;
+            esac
           done < "$gitignore_file"
           
           return 1
