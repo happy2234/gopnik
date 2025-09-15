@@ -13,12 +13,14 @@ Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit tha
 
 - 🔍 **Multi-Modal PII Detection**: Combines computer vision and NLP for comprehensive detection
 - 🚀 **Three Deployment Options**: Web demo, CLI tool, and REST API
-- 🔒 **Forensic-Grade Auditing**: Cryptographic audit trails and integrity validation
+- 🔒 **Forensic-Grade Security**: Cryptographic signatures, document integrity validation, and tamper-evident audit trails
+- 🛡️ **Enterprise Cryptography**: RSA/ECDSA digital signatures, SHA-256 hashing, and secure key management
 - ⚙️ **Custom Redaction Profiles**: Configurable rules for different use cases
 - 📄 **Layout Preservation**: Maintains document structure during redaction
 - 🌍 **Multilingual Support**: Handles multiple languages including Indic scripts
 - 🛡️ **Privacy-First**: No data leaves your environment in CLI mode
-- 📊 **Comprehensive Reporting**: Detailed audit logs and processing statistics
+- 📊 **Comprehensive Auditing**: Cryptographically signed audit logs with integrity validation
+- 🔍 **Forensic Validation**: Document authenticity verification and chain of custody tracking
 
 ## 🎯 Use Cases
 
@@ -53,11 +55,17 @@ pip install gopnik[all]
 # Process a single document
 gopnik process --input document.pdf --profile healthcare --output redacted.pdf
 
-# Validate document integrity
-gopnik validate --document redacted.pdf --audit audit.json
+# Validate document integrity (forensic-grade)
+gopnik validate --document redacted.pdf --audit audit.json --verbose
 
-# Batch processing
-gopnik batch --input-dir ./documents --profile legal --output-dir ./redacted
+# Batch processing with audit trails
+gopnik batch --input-dir ./documents --profile legal --output-dir ./redacted --enable-audit
+
+# Cryptographic validation
+python -c "
+from gopnik.utils.integrity_validator import validate_document_cli
+validate_document_cli('document.pdf', expected_hash='abc123...', verbose=True)
+"
 ```
 
 ### Web Demo
@@ -95,7 +103,9 @@ src/gopnik/
 │   └── api/             # REST API interface
 ├── ai/                  # AI engine components
 ├── utils/               # Utility functions
-│   ├── crypto.py        # Cryptographic utilities
+│   ├── crypto.py        # Cryptographic utilities (RSA/ECDSA, SHA-256)
+│   ├── audit_logger.py  # Enterprise audit logging system
+│   ├── integrity_validator.py # Forensic document validation
 │   ├── file_utils.py    # File handling
 │   └── logging_utils.py # Logging configuration
 └── config/              # Configuration management

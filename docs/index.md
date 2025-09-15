@@ -10,6 +10,8 @@ Welcome to the comprehensive documentation for Gopnik, the AI-powered forensic-g
 - **[User Guide](user-guide/index.md)**: Complete guide for using Gopnik
 - **[Installation](user-guide/installation.md)**: Installation instructions for all platforms
 - **[Quick Start](user-guide/quickstart.md)**: Get started in 5 minutes
+- **[Security Features](user-guide/security.md)**: Cryptographic security and audit trails
+- **[Integrity Validation](user-guide/validation.md)**: Forensic document validation
 - **[Tutorials](tutorials/index.md)**: Step-by-step tutorials
 - **[FAQ](faq.md)**: Frequently asked questions
 
@@ -17,6 +19,8 @@ Welcome to the comprehensive documentation for Gopnik, the AI-powered forensic-g
 - **[Developer Guide](developer-guide/index.md)**: Development setup and contribution guide
 - **[API Reference](api-reference/index.md)**: Complete API documentation
 - **[Architecture](developer-guide/architecture.md)**: System architecture overview
+- **[Cryptographic APIs](developer-guide/crypto-apis.md)**: Cryptographic utilities and audit APIs
+- **[Security Implementation](developer-guide/security.md)**: Security features implementation
 - **[Contributing](developer-guide/contributing.md)**: How to contribute to Gopnik
 
 ### Deployment Options
