@@ -35,6 +35,8 @@ Welcome to the Gopnik community wiki! This is a collaborative space where users 
 - **[Batch Processing Workflows](Batch-Processing-Workflows)**: Large-scale processing
 - **[Custom AI Models](Custom-AI-Models)**: Integrating custom models
 - **[Audit Trail Analysis](Audit-Trail-Analysis)**: Working with audit logs
+- **[Cryptographic Security](Cryptographic-Security)**: Document integrity and signing
+- **[Integrity Validation](Integrity-Validation)**: Forensic document validation
 - **[Troubleshooting Guide](Troubleshooting-Guide)**: Common issues and solutions
 
 ### Development

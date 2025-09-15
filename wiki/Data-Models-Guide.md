@@ -477,14 +477,145 @@ trail.export_to_csv(Path("audit_export.csv"))
 ### Cryptographic Support
 
 - **Hash generation**: SHA-256 for content integrity
-- **Signature support**: Digital signature placeholders
-- **Secure IDs**: UUID4 for unique identification
+- **Digital signatures**: RSA and ECDSA signing/verification
+- **Secure IDs**: Cryptographically secure random generation
+- **Key management**: Secure key generation and storage
 
 ### Privacy Protection
 
 - **Data validation**: Input sanitization and validation
 - **Secure serialization**: Safe JSON/dict conversion
 - **Memory protection**: Secure data handling patterns
+
+## 🛡️ Cryptographic Utilities
+
+### CryptographicUtils Class
+
+Comprehensive cryptographic operations:
+
+```python
+from gopnik.utils import CryptographicUtils
+
+crypto = CryptographicUtils()
+
+# Document hashing
+file_hash = crypto.generate_sha256_hash(Path("document.pdf"))
+content_hash = crypto.generate_sha256_hash_from_bytes(b"content")
+
+# RSA operations
+private_pem, public_pem = crypto.generate_rsa_key_pair(2048)
+signature = crypto.sign_data_rsa("data to sign")
+is_valid = crypto.verify_signature_rsa("data to sign", signature)
+
+# ECDSA operations
+private_pem, public_pem = crypto.generate_ec_key_pair()
+signature = crypto.sign_data_ecdsa("data to sign")
+is_valid = crypto.verify_signature_ecdsa("data to sign", signature)
+
+# Secure random generation
+audit_id = crypto.generate_secure_id()
+random_bytes = crypto.generate_secure_bytes(32)
+```
+
+### AuditLogger Class
+
+Enterprise-grade audit logging:
+
+```python
+from gopnik.utils import AuditLogger
+
+# Initialize with signing
+audit_logger = AuditLogger(
+    storage_path=Path("./audit_logs"),
+    enable_signing=True,
+    auto_sign=True
+)
+
+# Create audit trail
+trail = audit_logger.create_audit_trail("Processing Batch 2024-001")
+
+# Log operations
+audit_log = audit_logger.log_document_operation(
+    operation=AuditOperation.DOCUMENT_REDACTION,
+    document_id="doc_123",
+    user_id="user_456"
+)
+
+# Query logs
+recent_logs = audit_logger.query_logs(
+    operation=AuditOperation.DOCUMENT_UPLOAD,
+    start_time=datetime.now() - timedelta(days=7)
+)
+
+# Export and validation
+audit_logger.export_logs_to_json(Path("audit_export.json"))
+total, valid, issues = audit_logger.validate_all_logs()
+```
+
+### IntegrityValidator Class
+
+Forensic-grade document validation:
+
+```python
+from gopnik.utils import IntegrityValidator, ValidationResult
+
+validator = IntegrityValidator()
+
+# Validate document integrity
+report = validator.validate_document_integrity(
+    document_path=Path("document.pdf"),
+    expected_hash="sha256_hash",
+    audit_log_path=Path("audit.json")
+)
+
+# Check results
+print(f"Result: {report.overall_result}")
+print(f"Signature valid: {report.signature_valid}")
+print(f"Issues: {len(report.issues)}")
+
+# Batch validation
+reports = validator.validate_batch_documents(
+    document_dir=Path("./documents"),
+    audit_dir=Path("./audit_logs")
+)
+
+# Generate summary
+summary = validator.generate_validation_summary(reports)
+validator.export_validation_report(reports, Path("report.json"))
+```
+
+### Validation Models
+
+Comprehensive validation reporting:
+
+```python
+from gopnik.utils import ValidationResult, ValidationIssue, IntegrityReport
+
+# Validation results
+result = ValidationResult.VALID  # or HASH_MISMATCH, SIGNATURE_MISMATCH, etc.
+
+# Validation issues
+issue = ValidationIssue(
+    type="hash_mismatch",
+    severity="error",
+    message="Document hash does not match expected value",
+    recommendation="Verify document integrity"
+)
+
+# Integrity reports
+report = IntegrityReport(
+    document_id="doc_123",
+    validation_timestamp=datetime.now(timezone.utc),
+    overall_result=ValidationResult.VALID,
+    signature_valid=True,
+    audit_trail_valid=True
+)
+
+# Add issues and analyze
+report.add_issue("test_issue", "warning", "Test message")
+has_errors = report.has_errors()
+summary = report.get_summary()
+```
 
 ## 📈 Performance Considerations
 
