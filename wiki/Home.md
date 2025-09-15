@@ -32,11 +32,15 @@ Welcome to the Gopnik community wiki! This is a collaborative space where users 
 - **[Security Configuration](Security-Configuration)**: Security best practices
 
 ### Advanced Topics
+- **[Document Processing Core](Document-Processing-Core)**: Understanding the processing pipeline
+- **[AI Engine Architecture](AI-Engine-Architecture)**: CV, NLP, and Hybrid engines
+- **[Redaction Styles Guide](Redaction-Styles-Guide)**: Solid, pixelated, and blur redaction
 - **[Batch Processing Workflows](Batch-Processing-Workflows)**: Large-scale processing
 - **[Custom AI Models](Custom-AI-Models)**: Integrating custom models
 - **[Audit Trail Analysis](Audit-Trail-Analysis)**: Working with audit logs
 - **[Cryptographic Security](Cryptographic-Security)**: Document integrity and signing
 - **[Integrity Validation](Integrity-Validation)**: Forensic document validation
+- **[Performance Optimization](Performance-Optimization)**: Memory and processing efficiency
 - **[Troubleshooting Guide](Troubleshooting-Guide)**: Common issues and solutions
 
 ### Development

@@ -11,16 +11,43 @@ Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit tha
 
 ## ✨ Features
 
-- 🔍 **Multi-Modal PII Detection**: Combines computer vision and NLP for comprehensive detection
-- 🚀 **Three Deployment Options**: Web demo, CLI tool, and REST API
-- 🔒 **Forensic-Grade Security**: Cryptographic signatures, document integrity validation, and tamper-evident audit trails
-- 🛡️ **Enterprise Cryptography**: RSA/ECDSA digital signatures, SHA-256 hashing, and secure key management
-- ⚙️ **Custom Redaction Profiles**: Configurable rules for different use cases
-- 📄 **Layout Preservation**: Maintains document structure during redaction
-- 🌍 **Multilingual Support**: Handles multiple languages including Indic scripts
-- 🛡️ **Privacy-First**: No data leaves your environment in CLI mode
-- 📊 **Comprehensive Auditing**: Cryptographically signed audit logs with integrity validation
-- 🔍 **Forensic Validation**: Document authenticity verification and chain of custody tracking
+### 🔍 Advanced AI Detection
+- **Multi-Modal PII Detection**: Combines computer vision and NLP for comprehensive detection
+- **Hybrid AI Engine**: Intelligent fusion of CV and NLP results for maximum accuracy
+- **Visual PII Detection**: Faces, signatures, barcodes, QR codes using computer vision
+- **Text PII Detection**: Names, emails, phones, addresses, SSNs using advanced NLP
+- **Confidence Scoring**: Adjustable thresholds for precision/recall optimization
+
+### 📄 Document Processing Core
+- **Multi-Format Support**: PDF, PNG, JPEG, TIFF, BMP with structure preservation
+- **Page-by-Page Processing**: Efficient handling of multi-page documents
+- **Layout Preservation**: Maintains original document formatting and structure
+- **Batch Processing**: Process entire directories with progress tracking
+- **Memory Efficient**: Optimized for large document processing
+
+### 🎨 Flexible Redaction Styles
+- **Solid Redaction**: Black/white blocks for complete obscuration
+- **Pixelated Redaction**: Pixelation effect for partial visibility
+- **Blur Redaction**: Gaussian blur for aesthetic redaction
+- **Custom Patterns**: Configurable redaction styles per PII type
+
+### 🚀 Deployment Options
+- **Web Demo**: Interactive browser-based interface
+- **CLI Tool**: Command-line processing for automation
+- **REST API**: Programmatic integration capabilities
+- **Batch Processing**: Enterprise-scale document processing
+
+### 🔒 Forensic-Grade Security
+- **Cryptographic Signatures**: RSA/ECDSA digital signatures for audit logs
+- **Document Integrity**: SHA-256 hashing and tamper detection
+- **Audit Trails**: Comprehensive logging with cryptographic verification
+- **Chain of Custody**: Verifiable document processing history
+
+### ⚙️ Enterprise Features
+- **Custom Redaction Profiles**: Industry-specific configurations (HIPAA, PCI DSS)
+- **Multilingual Support**: Handles multiple languages including Indic scripts
+- **Privacy-First**: No data leaves your environment in CLI mode
+- **Performance Monitoring**: Built-in statistics and health checking
 
 ## 🎯 Use Cases
 
@@ -55,17 +82,44 @@ pip install gopnik[all]
 # Process a single document
 gopnik process --input document.pdf --profile healthcare --output redacted.pdf
 
-# Validate document integrity (forensic-grade)
-gopnik validate --document redacted.pdf --audit audit.json --verbose
-
 # Batch processing with audit trails
 gopnik batch --input-dir ./documents --profile legal --output-dir ./redacted --enable-audit
 
-# Cryptographic validation
-python -c "
-from gopnik.utils.integrity_validator import validate_document_cli
-validate_document_cli('document.pdf', expected_hash='abc123...', verbose=True)
-"
+# Validate document integrity (forensic-grade)
+gopnik validate --document redacted.pdf --audit audit.json --verbose
+
+# Test AI engines
+python examples/ai_engine_demo.py
+
+# Run comprehensive tests
+pytest tests/ -v
+```
+
+### Python API Usage
+
+```python
+from gopnik.core.processor import DocumentProcessor
+from gopnik.models.profiles import RedactionProfile
+from gopnik.ai.hybrid_engine import HybridAIEngine
+from pathlib import Path
+
+# Initialize processor with AI engine
+processor = DocumentProcessor()
+ai_engine = HybridAIEngine()
+processor.set_ai_engine(ai_engine)
+
+# Load redaction profile
+profile = RedactionProfile.from_yaml(Path("profiles/healthcare_hipaa.yaml"))
+
+# Process document
+result = processor.process_document(
+    input_path=Path("document.pdf"),
+    profile=profile
+)
+
+print(f"Processing completed: {result.success}")
+print(f"Detections found: {result.detection_count}")
+print(f"Output saved to: {result.output_path}")
 ```
 
 ### Web Demo
@@ -82,35 +136,69 @@ gopnik web --host localhost --port 8000
 gopnik api --host localhost --port 8080
 ```
 
-## Project Structure
+## 🏗️ Architecture
 
+### Core Processing Engine
 ```
-src/gopnik/
-├── core/                 # Core processing engine
-│   ├── interfaces.py     # Abstract interfaces
-│   ├── processor.py      # Main document processor
-│   ├── analyzer.py       # Document analysis
-│   └── redaction.py      # Redaction engine
-├── models/               # Data models
-│   ├── pii.py           # PII detection models
-│   ├── processing.py    # Processing results
-│   ├── profiles.py      # Redaction profiles
-│   ├── audit.py         # Audit logging
-│   └── errors.py        # Error handling
-├── interfaces/           # User interfaces
-│   ├── web/             # Web demo interface
-│   ├── cli/             # Command-line interface
-│   └── api/             # REST API interface
-├── ai/                  # AI engine components
-├── utils/               # Utility functions
-│   ├── crypto.py        # Cryptographic utilities (RSA/ECDSA, SHA-256)
-│   ├── audit_logger.py  # Enterprise audit logging system
-│   ├── integrity_validator.py # Forensic document validation
-│   ├── file_utils.py    # File handling
-│   └── logging_utils.py # Logging configuration
-└── config/              # Configuration management
-    ├── config.py        # Main configuration
-    └── settings.py      # Component settings
+src/gopnik/core/
+├── interfaces.py         # Abstract interfaces for extensibility
+├── processor.py          # Main document processor coordinator
+├── analyzer.py           # Document parsing and structure analysis
+└── redaction.py          # Multi-style redaction engine
+```
+
+### AI Detection Engines
+```
+src/gopnik/ai/
+├── cv_engine.py          # Computer vision PII detection
+├── nlp_engine.py         # Natural language processing engine
+└── hybrid_engine.py      # Intelligent fusion of CV + NLP
+```
+
+### Data Models
+```
+src/gopnik/models/
+├── pii.py               # PII detection and bounding box models
+├── processing.py        # Document and processing result models
+├── profiles.py          # Redaction profile management
+├── audit.py             # Audit logging and integrity models
+└── errors.py            # Comprehensive error handling
+```
+
+### Enterprise Security
+```
+src/gopnik/utils/
+├── crypto.py            # RSA/ECDSA signatures, SHA-256 hashing
+├── audit_logger.py      # Cryptographically signed audit trails
+├── integrity_validator.py # Forensic document validation
+├── file_utils.py        # Secure file operations
+└── logging_utils.py     # Structured logging configuration
+```
+
+### User Interfaces
+```
+src/gopnik/interfaces/
+├── web/                 # Interactive web demo
+├── cli/                 # Command-line interface
+└── api/                 # REST API server
+```
+
+## 🧪 Testing & Quality
+
+- **63 Comprehensive Tests**: Full coverage of core functionality
+- **Unit Tests**: Individual component testing
+- **Integration Tests**: End-to-end workflow validation
+- **Performance Tests**: Memory and processing efficiency
+- **Security Tests**: Cryptographic validation and integrity checks
+
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run specific test suites
+pytest tests/test_document_processor.py -v
+pytest tests/test_ai_integration.py -v
+pytest tests/test_redaction_engine.py -v
 ```
 
 ## Development
