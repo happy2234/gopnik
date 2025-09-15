@@ -125,7 +125,15 @@ jobs:
           if [ -f "$file" ]; then
             filename=$(basename "$file")
             
-            # Check if file should be ignored
+            # Direct check for files that should be excluded
+            case "$filename" in
+              "Wiki-Setup-Troubleshooting.md"|*troubleshooting*|*Troubleshooting*|*-dev.md|*-internal.md|*-draft.md|*-wip.md|*-private.md|*-secret.md|*-config.md|*-credentials.md|TODO.md|NOTES.md|SCRATCH.md)
+                echo "⏭️ Skipping $filename (excluded from public wiki)"
+                continue
+                ;;
+            esac
+            
+            # Also check .gitignore file if it exists
             if should_ignore_file "$filename"; then
               echo "⏭️ Skipping $filename (ignored by .gitignore)"
               continue
