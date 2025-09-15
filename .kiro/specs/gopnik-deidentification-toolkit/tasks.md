@@ -21,7 +21,7 @@
     - Write unit tests for model serialization and validation
     - _Requirements: 6.1, 6.3, 8.5_
 
-  - [ ] 2.3 Create redaction profile models and parser
+  - [x] 2.3 Create redaction profile models and parser
     - Implement RedactionProfile class with YAML/JSON parsing
     - Create profile validation logic and conflict resolution
     - Add support for profile inheritance and composition

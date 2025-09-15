@@ -14,7 +14,10 @@ from .processing import (
     validate_processing_result, merge_processing_results,
     create_processing_summary_report
 )
-from .profiles import RedactionProfile, RedactionStyle
+from .profiles import (
+    RedactionProfile, RedactionStyle, ProfileManager,
+    ProfileValidationError, ProfileConflictError
+)
 from .audit import (
     AuditLog, AuditTrail, SystemInfo, AuditOperation, AuditLevel,
     create_document_processing_audit_chain, validate_audit_log_integrity,
@@ -61,5 +64,8 @@ __all__ = [
     # Profile and Error Models
     "RedactionProfile",
     "RedactionStyle",
+    "ProfileManager",
+    "ProfileValidationError",
+    "ProfileConflictError",
     "ErrorResponse"
 ]
