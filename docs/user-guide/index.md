@@ -15,9 +15,9 @@ Gopnik is an AI-powered forensic-grade deidentification toolkit that automatical
 ## 📖 User Guides by Interface
 
 ### Command Line Interface (CLI)
-- **[CLI Overview](cli.md)**: Complete CLI documentation
-- **[CLI Commands](cli-commands.md)**: All available commands
-- **[CLI Examples](cli-examples.md)**: Real-world usage examples
+- **[CLI Reference](cli-reference.md)**: Complete CLI documentation and reference
+- **[CLI Quick Start](cli-quickstart.md)**: Get started with the CLI in minutes
+- **[CLI Examples](cli-examples.md)**: Real-world usage examples and scripts
 
 ### Web Demo
 - **[Web Demo Guide](web-demo.md)**: Using the web interface

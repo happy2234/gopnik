@@ -24,7 +24,8 @@ Welcome to the comprehensive documentation for Gopnik, the AI-powered forensic-g
 - **[Contributing](developer-guide/contributing.md)**: How to contribute to Gopnik
 
 ### Deployment Options
-- **[CLI Tool](user-guide/cli.md)**: Command-line interface documentation
+- **[CLI Tool](user-guide/cli-reference.md)**: Complete command-line interface reference
+- **[CLI Quick Start](user-guide/cli-quickstart.md)**: Get started with CLI in minutes
 - **[Web Demo](user-guide/web-demo.md)**: Web interface guide
 - **[REST API](user-guide/api.md)**: API integration guide
 - **[Desktop App](user-guide/desktop.md)**: Desktop application guide

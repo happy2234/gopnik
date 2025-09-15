@@ -23,8 +23,15 @@ pip install gopnik[all]
 ### Verify Installation
 
 ```bash
+# Check version and basic functionality
 gopnik --version
 gopnik --help
+
+# Test CLI commands
+gopnik profile list
+gopnik process --help
+gopnik batch --help
+gopnik validate --help
 ```
 
 ## 📦 Installation Methods
@@ -228,14 +235,20 @@ gopnik test ai-engines
 ### Process Test Document
 
 ```bash
-# Download test document
-curl -O https://github.com/happy2234/gopnik/raw/main/tests/data/sample.pdf
+# Create a simple test document
+echo "Test document with PII: John Doe, john@example.com, 555-123-4567" > test.txt
 
-# Process with default profile
-gopnik process sample.pdf --output redacted.pdf
+# Process with CLI
+gopnik process test.txt --profile default --dry-run
 
-# Verify output
-ls -la redacted.pdf
+# Process for real
+gopnik process test.txt --profile default --output redacted.txt
+
+# Validate the result
+gopnik validate redacted.txt
+
+# Check available profiles
+gopnik profile list --verbose
 ```
 
 ## 🚨 Troubleshooting

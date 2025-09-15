@@ -32,10 +32,10 @@ Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit tha
 - **Custom Patterns**: Configurable redaction styles per PII type
 
 ### 🚀 Deployment Options
+- **CLI Tool**: Full-featured command-line interface with progress tracking
 - **Web Demo**: Interactive browser-based interface
-- **CLI Tool**: Command-line processing for automation
 - **REST API**: Programmatic integration capabilities
-- **Batch Processing**: Enterprise-scale document processing
+- **Batch Processing**: Enterprise-scale document processing with filtering
 
 ### 🔒 Forensic-Grade Security
 - **Cryptographic Signatures**: RSA/ECDSA digital signatures for audit logs
@@ -80,19 +80,35 @@ pip install gopnik[all]
 
 ```bash
 # Process a single document
-gopnik process --input document.pdf --profile healthcare --output redacted.pdf
+gopnik process document.pdf --profile healthcare --output redacted.pdf
 
-# Batch processing with audit trails
-gopnik batch --input-dir ./documents --profile legal --output-dir ./redacted --enable-audit
+# Process with custom profile file
+gopnik process document.pdf --profile-file custom_profile.yaml --dry-run
 
-# Validate document integrity (forensic-grade)
-gopnik validate --document redacted.pdf --audit audit.json --verbose
+# Batch processing with progress tracking
+gopnik batch /path/to/documents --profile default --recursive --progress
 
-# Test AI engines
-python examples/ai_engine_demo.py
+# Batch processing with filtering and limits
+gopnik batch /docs --pattern "*.pdf" --max-files 100 --continue-on-error
 
-# Run comprehensive tests
-pytest tests/ -v
+# Document validation with audit trails
+gopnik validate document.pdf audit.json --verify-signatures --verbose
+
+# Auto-find audit logs for validation
+gopnik validate document.pdf --audit-dir /audit/logs
+
+# Profile management
+gopnik profile list --verbose --format json
+gopnik profile show healthcare
+gopnik profile create --name custom --based-on default --pii-types name email phone
+gopnik profile edit healthcare --add-pii-types ssn --redaction-style blur
+gopnik profile validate custom
+gopnik profile delete old-profile --force
+
+# Get help for any command
+gopnik --help
+gopnik process --help
+gopnik profile --help
 ```
 
 ### Python API Usage

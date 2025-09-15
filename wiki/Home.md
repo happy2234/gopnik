@@ -20,7 +20,8 @@ Welcome to the Gopnik community wiki! This is a collaborative space where users 
 - **[Common Use Cases](Common-Use-Cases)**: Real-world scenarios and solutions
 
 ### User Guides
-- **[CLI Usage Examples](CLI-Usage-Examples)**: Command-line interface examples
+- **[CLI Usage Guide](CLI-Usage-Guide)**: Complete command-line interface guide
+- **[CLI Quick Examples](CLI-Quick-Examples)**: Common CLI usage patterns
 - **[Web Demo Tutorial](Web-Demo-Tutorial)**: Using the web interface
 - **[API Integration Examples](API-Integration-Examples)**: REST API usage
 - **[Desktop App Guide](Desktop-App-Guide)**: Desktop application usage

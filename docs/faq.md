@@ -71,6 +71,98 @@ Yes! Gopnik supports offline operation:
 - **Desktop app**: Offline-first design
 - **Web demo**: Requires internet for hosting but processes locally
 
+## 💻 CLI Questions
+
+### How do I get started with the CLI?
+
+```bash
+# Install Gopnik
+pip install gopnik
+
+# Process your first document
+gopnik process document.pdf
+
+# Get help
+gopnik --help
+gopnik process --help
+```
+
+See our [CLI Quick Start](user-guide/cli-quickstart.md) for a complete guide.
+
+### What CLI commands are available?
+
+- **`process`**: Process a single document
+- **`batch`**: Process multiple documents in a directory
+- **`validate`**: Validate document integrity using audit trails
+- **`profile`**: Manage redaction profiles (list, create, edit, delete)
+
+### How do I create and manage profiles via CLI?
+
+```bash
+# List available profiles
+gopnik profile list --verbose
+
+# Show profile details
+gopnik profile show healthcare
+
+# Create new profile
+gopnik profile create --name custom --pii-types name email phone
+
+# Edit existing profile
+gopnik profile edit healthcare --add-pii-types ssn --redaction-style blur
+
+# Validate profile
+gopnik profile validate custom
+
+# Delete profile
+gopnik profile delete old-profile --force
+```
+
+### How do I use JSON output for automation?
+
+```bash
+# Process with JSON output
+result=$(gopnik process document.pdf --format json)
+
+# Extract information with jq
+detections=$(echo "$result" | jq -r '.detections_found')
+echo "Found $detections PII detections"
+
+# Batch processing with JSON
+gopnik batch /documents --format json > batch_results.json
+```
+
+### How do I validate processed documents?
+
+```bash
+# Basic validation
+gopnik validate document_redacted.pdf
+
+# With signature verification
+gopnik validate document_redacted.pdf --verify-signatures --verbose
+
+# Auto-find audit log
+gopnik validate document_redacted.pdf --audit-dir /audit/logs
+
+# JSON output for automation
+gopnik validate document_redacted.pdf --format json
+```
+
+### Can I preview what will be processed without actually processing?
+
+Yes! Use the `--dry-run` option:
+
+```bash
+# Preview single document processing
+gopnik process document.pdf --profile healthcare --dry-run
+
+# Preview batch processing
+gopnik batch /documents --recursive --dry-run
+
+# See what files would be processed
+gopnik batch /documents --pattern "*.pdf" --dry-run
+```
+
 ## 🔧 Usage Questions
 
 ### How accurate is Gopnik's PII detection?
@@ -121,10 +213,13 @@ Yes! Gopnik supports batch processing:
 
 ```bash
 # Process entire directory
-gopnik batch --input-dir ./documents --output-dir ./redacted
+gopnik batch /documents --profile healthcare --recursive --progress
 
-# Process with specific profile
-gopnik batch --input-dir ./docs --profile healthcare --output-dir ./clean
+# Process with filtering
+gopnik batch /documents --pattern "*.pdf" --max-files 100
+
+# Dry run to preview
+gopnik batch /documents --dry-run --recursive
 ```
 
 ## 🛡️ Security and Privacy
@@ -248,8 +343,17 @@ result = processor.process_document('document.pdf', profile='healthcare')
 
 **CLI integration:**
 ```bash
-# In shell scripts
-gopnik process input.pdf --output output.pdf --format json > result.json
+# Process documents
+gopnik process document.pdf --profile healthcare --output redacted.pdf
+
+# Batch processing
+gopnik batch /documents --recursive --progress --format json
+
+# Validate results
+gopnik validate redacted.pdf --verify-signatures --verbose
+
+# Profile management
+gopnik profile create --name custom --pii-types name email phone
 ```
 
 ### Can I run Gopnik as a service?
