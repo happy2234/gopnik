@@ -1,7 +1,7 @@
 """Version information for Gopnik components."""
 
 CLI_VERSION = "0.1.0"
-WEB_VERSION = "0.1.0"  # Will be updated by web workflow
+WEB_VERSION = "0.1"  # Will be updated by web workflow
 DESKTOP_VERSION = "0.1.0"  # Will be updated by desktop workflow
 API_VERSION = "v1"
 
