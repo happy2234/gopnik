@@ -123,10 +123,12 @@ jobs:
         [skip ci]"
 
     - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.PAT_TOKEN }}
-        branch: main
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff --staged --quiet || git commit -m "chore: Update Web version to ${{ github.event.inputs.version }}"
+        git push origin main
 
     - name: Deploy to demo environment
       if: github.event.inputs.version

@@ -59,7 +59,7 @@ jobs:
         fail_ci_if_error: false
     
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: unit-test-results-${{ matrix.python-version }}
@@ -110,7 +110,7 @@ jobs:
           -v
     
     - name: Upload integration test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: integration-test-results
@@ -145,7 +145,7 @@ jobs:
           -v
     
     - name: Upload performance test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: performance-test-results
@@ -188,7 +188,7 @@ jobs:
         safety check --json --output safety-report.json || true
     
     - name: Upload security test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-test-results
@@ -218,7 +218,7 @@ jobs:
         pip install pytest pytest-cov pytest-asyncio
     
     - name: Download all test artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
     
     - name: Run comprehensive test suite
       run: |
@@ -229,7 +229,7 @@ jobs:
           --ci
     
     - name: Upload comprehensive report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: comprehensive-test-report
@@ -279,19 +279,11 @@ jobs:
         echo "🚀 Ready for deployment"
         echo "DEPLOYMENT_READY=true" >> $GITHUB_ENV
     
-    - name: Create deployment status
+    - name: Set deployment status
       if: env.DEPLOYMENT_READY == 'true'
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.rest.repos.createDeploymentStatus({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            deployment_id: context.payload.deployment?.id || 'latest',
-            state: 'success',
-            description: 'All tests passed - ready for deployment',
-            environment: 'production'
-          });
+      run: |
+        echo "✅ All tests passed - ready for deployment"
+        echo "🚀 Deployment status: READY"
 
   notify-results:
     name: Notify Results
