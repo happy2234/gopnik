@@ -43,6 +43,7 @@ dependencies = [
     "pillow>=9.0.0",
     "colorama>=0.4.4",
     "tqdm>=4.64.0",
+    "pymupdf>=1.23.0",
 ]
 
 [project.optional-dependencies]
@@ -59,6 +60,7 @@ ai = [
     "transformers>=4.30.0",
     "opencv-python>=4.8.0",
     "numpy>=1.24.0",
+    "pymupdf>=1.23.0",
 ]
 dev = [
     "pytest>=7.0.0",
@@ -82,6 +84,7 @@ all = [
     "transformers>=4.30.0",
     "opencv-python>=4.8.0",
     "numpy>=1.24.0",
+    "pymupdf>=1.23.0",
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "pytest-asyncio>=0.21.0",
