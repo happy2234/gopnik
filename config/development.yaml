@@ -1,0 +1,147 @@
+# Gopnik Development Configuration
+
+# Environment settings
+environment: development
+debug: true
+testing: false
+
+# Logging configuration
+logging:
+  level: DEBUG
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/gopnik-dev.log"
+  max_size: "10MB"
+  backup_count: 5
+  console: true
+
+# Processing configuration
+processing:
+  confidence_threshold: 0.7
+  max_file_size: "50MB"
+  temp_dir: "temp"
+  max_concurrent_jobs: 4
+  job_timeout: 300
+  memory_limit: "2GB"
+
+# AI engine configuration
+ai_engines:
+  cv_engine:
+    enabled: true
+    model_path: "models/cv"
+    device: "auto"
+    batch_size: 8
+    confidence_threshold: 0.7
+    cache_enabled: true
+  
+  nlp_engine:
+    enabled: true
+    model_path: "models/nlp"
+    device: "auto"
+    batch_size: 16
+    confidence_threshold: 0.7
+    cache_enabled: true
+  
+  hybrid_engine:
+    overlap_threshold: 0.5
+    confidence_boost: 0.1
+    consensus_weight: 0.2
+    deduplication_enabled: true
+
+# Audit configuration
+audit:
+  enabled: true
+  audit_dir: "audit"
+  sign_logs: true
+  key_path: "keys"
+  retention_days: 90
+  compress_old_logs: true
+
+# Security configuration
+security:
+  secure_temp_files: true
+  memory_protection: true
+  auto_cleanup: true
+  cleanup_interval: 3600
+  max_temp_age: 86400
+
+# API configuration (for development API server)
+api:
+  host: "127.0.0.1"
+  port: 8000
+  workers: 2
+  reload: true
+  log_level: "debug"
+  
+  # CORS settings for development
+  cors_origins: ["http://localhost:3000", "http://127.0.0.1:3000"]
+  cors_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  cors_headers: ["*"]
+  
+  # File upload settings
+  max_file_size: "50MB"
+  upload_timeout: 300
+  temp_upload_dir: "temp/uploads"
+  
+  # Rate limiting (relaxed for development)
+  rate_limit_enabled: false
+  rate_limit_requests: 1000
+  rate_limit_window: 60
+
+# Web interface configuration
+web:
+  host: "127.0.0.1"
+  port: 8080
+  debug: true
+  secret_key: "dev-secret-key-change-in-production"
+  
+  # Session configuration
+  session_timeout: 3600
+  session_cookie_secure: false
+  session_cookie_httponly: true
+  
+  # File upload settings
+  max_file_size: "50MB"
+  allowed_extensions: [".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp"]
+  upload_timeout: 300
+
+# Database configuration (optional for development)
+database:
+  enabled: false
+  url: "sqlite:///gopnik-dev.db"
+  echo: true
+  pool_size: 5
+  max_overflow: 10
+
+# Cache configuration (optional for development)
+cache:
+  enabled: false
+  backend: "memory"
+  redis_url: "redis://localhost:6379/0"
+  default_timeout: 300
+
+# Monitoring configuration
+monitoring:
+  enabled: true
+  metrics_port: 9100
+  health_check_interval: 30
+  
+  # Prometheus metrics
+  prometheus:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+
+# Performance tuning for development
+performance:
+  parallel_processing: true
+  max_workers: 4
+  worker_timeout: 300
+  memory_monitoring: true
+  gc_threshold: 0.8
+
+# Feature flags for development
+features:
+  experimental_ai_models: true
+  advanced_redaction_styles: true
+  batch_processing_v2: false
+  api_v2_endpoints: false

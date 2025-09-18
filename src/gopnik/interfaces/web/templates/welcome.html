@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gopnik - AI-Powered Deidentification Toolkit</title>
+    <link rel="stylesheet" href="/static/css/welcome.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>Gopnik</h1>
+                <span class="tagline">AI-Powered Deidentification</span>
+            </div>
+            <nav class="nav">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#versions" class="nav-link">Versions</a>
+                <a href="#docs" class="nav-link">Documentation</a>
+                <a href="/demo" class="nav-link cta">Try Demo</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 class="hero-title">Forensic-Grade Document Deidentification</h2>
+                    <p class="hero-description">
+                        Advanced AI-powered toolkit for secure, auditable, and compliant removal of 
+                        personally identifiable information from documents and images.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="/demo" class="btn btn-primary">Try Web Demo</a>
+                        <a href="#versions" class="btn btn-secondary">Download CLI</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="demo-preview">
+                        <div class="document-before">
+                            <div class="document-header">Original Document</div>
+                            <div class="document-content">
+                                <div class="text-line">Name: <span class="pii">John Smith</span></div>
+                                <div class="text-line">Email: <span class="pii">john@example.com</span></div>
+                                <div class="text-line">Phone: <span class="pii">(555) 123-4567</span></div>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="document-after">
+                            <div class="document-header">Redacted Document</div>
+                            <div class="document-content">
+                                <div class="text-line">Name: <span class="redacted">████████</span></div>
+                                <div class="text-line">Email: <span class="redacted">████████████</span></div>
+                                <div class="text-line">Phone: <span class="redacted">██████████</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h3 class="section-title">Key Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h4>AI-Powered Detection</h4>
+                        <p>Advanced computer vision and NLP models detect PII with high accuracy across multiple languages and document types.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4>Forensic-Grade Security</h4>
+                        <p>Cryptographic audit trails, integrity validation, and secure processing ensure compliance with regulatory requirements.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h4>Multiple Interfaces</h4>
+                        <p>Choose from web demo, command-line tool, or REST API to fit your workflow and integration needs.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h4>Configurable Profiles</h4>
+                        <p>Customizable redaction profiles for different compliance requirements (HIPAA, GDPR, etc.).</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4>Batch Processing</h4>
+                        <p>Process multiple documents efficiently with progress tracking and detailed reporting.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h4>Integrity Validation</h4>
+                        <p>Verify document integrity and audit trail authenticity with cryptographic validation tools.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="versions" class="versions">
+            <div class="container">
+                <h3 class="section-title">Choose Your Version</h3>
+                <div class="versions-grid">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <h4>Web Demo</h4>
+                            <span class="version-badge free">Free</span>
+                        </div>
+                        <p class="version-description">Try Gopnik instantly in your browser with our interactive demo.</p>
+                        <ul class="version-features">
+                            <li>✓ Single document processing</li>
+                            <li>✓ Drag-and-drop interface</li>
+                            <li>✓ Real-time preview</li>
+                            <li>✓ Basic redaction profiles</li>
+                            <li>✗ Batch processing</li>
+                            <li>✗ API access</li>
+                        </ul>
+                        <a href="/demo" class="btn btn-primary">Try Now</a>
+                    </div>
+                    
+                    <div class="version-card featured">
+                        <div class="version-header">
+                            <h4>CLI Tool</h4>
+                            <span class="version-badge">Open Source</span>
+                        </div>
+                        <p class="version-description">Full-featured command-line tool for developers and power users.</p>
+                        <ul class="version-features">
+                            <li>✓ Batch processing</li>
+                            <li>✓ Custom profiles</li>
+                            <li>✓ Audit trails</li>
+                            <li>✓ Integrity validation</li>
+                            <li>✓ Scriptable automation</li>
+                            <li>✓ Local processing</li>
+                        </ul>
+                        <div class="download-options">
+                            <a href="#" class="btn btn-primary">pip install gopnik</a>
+                            <div class="download-links">
+                                <a href="#">GitHub</a> | <a href="#">PyPI</a> | <a href="#">Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="version-card">
+                        <div class="version-header">
+                            <h4>REST API</h4>
+                            <span class="version-badge">Enterprise</span>
+                        </div>
+                        <p class="version-description">Integrate deidentification into your applications and workflows.</p>
+                        <ul class="version-features">
+                            <li>✓ RESTful endpoints</li>
+                            <li>✓ Async processing</li>
+                            <li>✓ Job tracking</li>
+                            <li>✓ OpenAPI docs</li>
+                            <li>✓ Scalable deployment</li>
+                            <li>✓ Enterprise support</li>
+                        </ul>
+                        <a href="/docs/api" class="btn btn-secondary">API Docs</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="docs" class="getting-started">
+            <div class="container">
+                <h3 class="section-title">Getting Started</h3>
+                <div class="guides-grid">
+                    <div class="guide-card">
+                        <h4>Quick Start Guide</h4>
+                        <p>Get up and running with Gopnik in minutes.</p>
+                        <a href="/docs/quickstart" class="guide-link">Read Guide →</a>
+                    </div>
+                    <div class="guide-card">
+                        <h4>CLI Reference</h4>
+                        <p>Complete command-line interface documentation.</p>
+                        <a href="/docs/cli" class="guide-link">View Reference →</a>
+                    </div>
+                    <div class="guide-card">
+                        <h4>API Integration</h4>
+                        <p>Examples and best practices for API integration.</p>
+                        <a href="/docs/api" class="guide-link">See Examples →</a>
+                    </div>
+                    <div class="guide-card">
+                        <h4>Security Guide</h4>
+                        <p>Understanding audit trails and compliance features.</p>
+                        <a href="/docs/security" class="guide-link">Learn More →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h5>Gopnik</h5>
+                    <p>AI-powered deidentification toolkit for secure document processing.</p>
+                </div>
+                <div class="footer-section">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="/docs">Documentation</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">PyPI</a></li>
+                        <li><a href="#">Examples</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="/docs/faq">FAQ</a></li>
+                        <li><a href="#">Issues</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Gopnik. Open source under MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/welcome.js"></script>
+</body>
+</html>

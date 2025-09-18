@@ -1,5 +1,9 @@
 name: Publish to PyPI
 
+# This workflow uses PyPI Trusted Publishing with OIDC
+# No API tokens required - authentication is handled automatically
+# Environment URLs may not be visible in GitHub UI - this is normal behavior
+
 on:
   release:
     types: [published]
@@ -17,7 +21,13 @@ on:
 
 permissions:
   contents: read
-  id-token: write  # For trusted publishing
+  id-token: write  # Required for PyPI Trusted Publishing (OIDC)
+
+# Prerequisites for this workflow:
+# 1. PyPI Trusted Publisher configured at https://pypi.org/manage/account/publishing/
+# 2. Test PyPI Trusted Publisher configured at https://test.pypi.org/manage/account/publishing/
+# 3. GitHub environments 'pypi' and 'test-pypi' created (URL field not required)
+# 4. See docs/PYPI_TRUSTED_PUBLISHING_SETUP.md for complete setup instructions
 
 jobs:
   build:
@@ -110,7 +120,7 @@ jobs:
     if: github.event.inputs.test_pypi == 'true' || github.event_name == 'workflow_dispatch'
     environment:
       name: test-pypi
-      url: https://test.pypi.org/p/gopnik
+      # Note: Environment URL may not be visible in GitHub UI - this is normal
     
     steps:
     - name: Download build artifacts
@@ -123,8 +133,6 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
-        username: __token__
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         verbose: true
 
     - name: Test installation from Test PyPI
@@ -140,7 +148,7 @@ jobs:
     if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_pypi == 'false')
     environment:
       name: pypi
-      url: https://pypi.org/p/gopnik
+      # Note: Environment URL may not be visible in GitHub UI - this is normal
     
     steps:
     - name: Download build artifacts
@@ -152,8 +160,6 @@ jobs:
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        username: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
         verbose: true
 
     - name: Test installation from PyPI

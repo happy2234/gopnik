@@ -1,0 +1,13 @@
+confidence_threshold: 0.8
+custom_rules: {}
+description: Test profile
+metadata: {}
+multilingual_support:
+- en
+name: test_profile
+redaction_style: solid_black
+text_rules:
+  names: true
+version: '1.0'
+visual_rules:
+  faces: true

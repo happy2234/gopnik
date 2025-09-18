@@ -8,11 +8,14 @@ Welcome to the comprehensive documentation for Gopnik, the AI-powered forensic-g
 
 ### For Users
 - **[User Guide](user-guide/index.md)**: Complete guide for using Gopnik
+- **[CLI Manual](../MANUAL_CLI.md)**: Comprehensive command-line interface guide
+- **[Web Manual](../MANUAL_WEB.md)**: Complete web interface documentation
+- **[API Manual](../MANUAL_API.md)**: Detailed REST API reference and integration guide
 - **[Installation](user-guide/installation.md)**: Installation instructions for all platforms
 - **[Quick Start](user-guide/quickstart.md)**: Get started in 5 minutes
 - **[Security Features](user-guide/security.md)**: Cryptographic security and audit trails
 - **[Integrity Validation](user-guide/validation.md)**: Forensic document validation
-- **[Tutorials](tutorials/index.md)**: Step-by-step tutorials
+- **[Usage Scenarios](../SCENARIOS.md)**: Real-world examples and test cases
 - **[FAQ](faq.md)**: Frequently asked questions
 
 ### For Developers
@@ -27,7 +30,10 @@ Welcome to the comprehensive documentation for Gopnik, the AI-powered forensic-g
 - **[CLI Tool](user-guide/cli-reference.md)**: Complete command-line interface reference
 - **[CLI Quick Start](user-guide/cli-quickstart.md)**: Get started with CLI in minutes
 - **[Web Demo](user-guide/web-demo.md)**: Web interface guide
-- **[REST API](user-guide/api.md)**: API integration guide
+- **[REST API](user-guide/api.md)**: Comprehensive API integration guide
+- **[Docker Deployment](../docker-compose.yml)**: Container orchestration for development
+- **[Production Deployment](../docker-compose.prod.yml)**: Production-ready container stack
+- **[Deployment Scripts](../scripts/deploy.sh)**: Automated deployment and management
 - **[Desktop App](user-guide/desktop.md)**: Desktop application guide
 
 ## 🚀 Quick Links

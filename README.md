@@ -34,7 +34,10 @@ Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit tha
 ### 🚀 Deployment Options
 - **CLI Tool**: Full-featured command-line interface with progress tracking
 - **Web Demo**: Interactive browser-based interface
-- **REST API**: Programmatic integration capabilities
+- **REST API**: Comprehensive programmatic integration with FastAPI
+- **Docker Containers**: Production-ready containerized deployments
+- **Docker Compose**: Complete orchestration for development and production
+- **Kubernetes**: Scalable cloud-native deployments (configurations included)
 - **Batch Processing**: Enterprise-scale document processing with filtering
 
 ### 🔒 Forensic-Grade Security
@@ -62,6 +65,7 @@ Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit tha
 
 ### Installation
 
+#### Python Package
 ```bash
 # Basic installation
 pip install gopnik
@@ -74,6 +78,33 @@ pip install gopnik[ai]
 
 # Full installation
 pip install gopnik[all]
+```
+
+#### Docker Deployment
+```bash
+# CLI container
+docker run -v /path/to/docs:/home/gopnik/data gopnik/cli process document.pdf
+
+# API server
+docker run -p 8000:80 gopnik/api
+
+# Web interface
+docker run -p 8080:80 gopnik/web
+
+# Complete stack with Docker Compose
+docker-compose up -d
+```
+
+#### Production Deployment
+```bash
+# Deploy to production environment
+./scripts/deploy.sh
+
+# Deploy specific services
+SERVICES="gopnik-api gopnik-web" ./scripts/deploy.sh
+
+# Deploy with custom configuration
+DEPLOYMENT_ENV=production ./scripts/deploy.sh
 ```
 
 ### CLI Usage
@@ -105,10 +136,15 @@ gopnik profile edit healthcare --add-pii-types ssn --redaction-style blur
 gopnik profile validate custom
 gopnik profile delete old-profile --force
 
+# Start REST API server
+gopnik api --host 0.0.0.0 --port 8000
+gopnik api --reload  # Development mode
+
 # Get help for any command
 gopnik --help
 gopnik process --help
 gopnik profile --help
+gopnik api --help
 ```
 
 ### Python API Usage
@@ -145,11 +181,52 @@ print(f"Output saved to: {result.output_path}")
 gopnik web --host localhost --port 8000
 ```
 
-### API Server
+### REST API Server
 
 ```bash
 # Start API server
 gopnik api --host localhost --port 8080
+
+# Development mode with auto-reload
+gopnik api --reload --log-level debug
+
+# Access interactive documentation
+# Swagger UI: http://localhost:8080/docs
+# ReDoc: http://localhost:8080/redoc
+```
+
+#### API Usage Examples
+
+```python
+import requests
+
+# Health check
+response = requests.get('http://localhost:8080/api/v1/health')
+print(f"API Status: {response.json()['status']}")
+
+# Process document
+with open('document.pdf', 'rb') as f:
+    files = {'file': f}
+    data = {'profile_name': 'healthcare_hipaa'}
+    
+    response = requests.post(
+        'http://localhost:8080/api/v1/process',
+        files=files,
+        data=data
+    )
+    
+    result = response.json()
+    print(f"Processing successful: {result['success']}")
+    print(f"Detections found: {len(result['detections'])}")
+```
+
+```bash
+# cURL examples
+curl http://localhost:8080/api/v1/health
+
+curl -X POST http://localhost:8080/api/v1/process \
+  -F "file=@document.pdf" \
+  -F "profile_name=default"
 ```
 
 ## 🏗️ Architecture
@@ -196,7 +273,11 @@ src/gopnik/utils/
 src/gopnik/interfaces/
 ├── web/                 # Interactive web demo
 ├── cli/                 # Command-line interface
-└── api/                 # REST API server
+└── api/                 # FastAPI REST API server
+    ├── app.py           # FastAPI application
+    ├── models.py        # Pydantic request/response models
+    ├── dependencies.py  # Dependency injection
+    └── routers/         # API endpoint routers
 ```
 
 ## 🧪 Testing & Quality
@@ -226,15 +307,31 @@ pytest tests/test_redaction_engine.py -v
 git clone https://github.com/happy2234/gopnik.git
 cd gopnik
 
-# Install in development mode
-pip install -e .[dev]
+# Install in development mode with all dependencies
+pip install -e .[all,dev]
 
 # Run tests
 pytest
 
+# Run API-specific tests
+pytest tests/test_api_*.py -v
+
 # Code formatting
 black src/
 flake8 src/
+```
+
+### Development Servers
+
+```bash
+# Start API server in development mode
+gopnik api --reload --log-level debug
+
+# Start web demo (when implemented)
+gopnik web --reload
+
+# Run CLI commands
+gopnik process document.pdf --profile default
 ```
 
 ## License
@@ -247,9 +344,14 @@ Please read CONTRIBUTING.md for details on our code of conduct and the process f
 
 ## 📚 Documentation
 
+### Complete Documentation Suite
 - **[User Guide](https://happy2234.github.io/gopnik/user-guide/)**: Complete user documentation
 - **[Developer Guide](https://happy2234.github.io/gopnik/developer-guide/)**: API reference and development docs
-- **[Tutorials](https://happy2234.github.io/gopnik/tutorials/)**: Step-by-step tutorials
+- **[CLI Manual](MANUAL_CLI.md)**: Comprehensive command-line interface guide
+- **[Web Manual](MANUAL_WEB.md)**: Complete web interface documentation
+- **[API Manual](MANUAL_API.md)**: Detailed REST API reference and integration guide
+- **[Usage Scenarios](SCENARIOS.md)**: Real-world examples and test cases
+- **[Deployment Guide](scripts/deploy.sh)**: Production deployment and Docker configurations
 - **[FAQ](https://happy2234.github.io/gopnik/faq/)**: Frequently asked questions
 
 ## 🤝 Community & Support

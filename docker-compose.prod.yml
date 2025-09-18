@@ -1,0 +1,325 @@
+# Docker Compose for Gopnik Production Environment
+version: '3.8'
+
+services:
+  # Production API server with load balancing
+  gopnik-api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    ports:
+      - "8000:80"
+    volumes:
+      - audit-data:/app/audit
+      - temp-data:/app/temp
+      - logs-data:/app/logs
+      - ./config/production.yaml:/app/config/gopnik.yaml:ro
+      - ./profiles:/app/profiles:ro
+    environment:
+      - GOPNIK_ENV=production
+      - GOPNIK_LOG_LEVEL=info
+      - GOPNIK_WORKERS=4
+      - GOPNIK_SECRET_KEY=${GOPNIK_SECRET_KEY}
+      - GOPNIK_SSL_KEYFILE=${GOPNIK_SSL_KEYFILE}
+      - GOPNIK_SSL_CERTFILE=${GOPNIK_SSL_CERTFILE}
+    networks:
+      - gopnik-prod-network
+    secrets:
+      - gopnik_ssl_key
+      - gopnik_ssl_cert
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Production web interface
+  gopnik-web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    ports:
+      - "8080:80"
+    volumes:
+      - audit-data:/app/audit
+      - temp-data:/app/temp
+      - logs-data:/app/logs
+      - ./config/production.yaml:/app/config/gopnik.yaml:ro
+      - ./profiles:/app/profiles:ro
+    environment:
+      - GOPNIK_ENV=production
+      - GOPNIK_LOG_LEVEL=info
+    networks:
+      - gopnik-prod-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Load balancer (nginx)
+  nginx-lb:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx-lb.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+      - logs-data:/var/log/nginx
+    networks:
+      - gopnik-prod-network
+    depends_on:
+      - gopnik-api
+      - gopnik-web
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    volumes:
+      - redis-data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - gopnik-prod-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+  # PostgreSQL for audit logs and job management
+  postgres:
+    image: postgres:15-alpine
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    environment:
+      - POSTGRES_DB=gopnik
+      - POSTGRES_USER=gopnik
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+    networks:
+      - gopnik-prod-network
+    secrets:
+      - postgres_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gopnik"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus-prod.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    networks:
+      - gopnik-prod-network
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Grafana for metrics visualization
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD_FILE=/run/secrets/grafana_password
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    networks:
+      - gopnik-prod-network
+    secrets:
+      - grafana_password
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Log aggregation with Fluentd (optional)
+  fluentd:
+    image: fluent/fluentd:v1.16-debian-1
+    volumes:
+      - ./docker/fluentd/fluent.conf:/fluentd/etc/fluent.conf:ro
+      - logs-data:/var/log
+    networks:
+      - gopnik-prod-network
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+networks:
+  gopnik-prod-network:
+    driver: overlay
+    name: gopnik-prod-network
+    attachable: true
+
+volumes:
+  audit-data:
+    name: gopnik-audit-data
+    driver: local
+  temp-data:
+    name: gopnik-temp-data
+    driver: local
+  logs-data:
+    name: gopnik-logs-data
+    driver: local
+  redis-data:
+    name: gopnik-redis-data
+    driver: local
+  postgres-data:
+    name: gopnik-postgres-data
+    driver: local
+  prometheus-data:
+    name: gopnik-prometheus-data
+    driver: local
+  grafana-data:
+    name: gopnik-grafana-data
+    driver: local
+
+secrets:
+  gopnik_ssl_key:
+    file: ./secrets/ssl_key.pem
+  gopnik_ssl_cert:
+    file: ./secrets/ssl_cert.pem
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  grafana_password:
+    file: ./secrets/grafana_password.txt

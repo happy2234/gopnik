@@ -2,6 +2,15 @@
 
 This guide covers all installation methods for Gopnik across different platforms and use cases.
 
+## 📖 Complete Documentation Suite
+
+Before installation, explore our comprehensive documentation:
+- **[CLI Manual](../MANUAL_CLI.md)**: Complete command-line interface guide with examples
+- **[Web Manual](../MANUAL_WEB.md)**: Web interface documentation and tutorials
+- **[API Manual](../MANUAL_API.md)**: REST API reference and integration guide
+- **[Usage Scenarios](../SCENARIOS.md)**: Real-world examples and comprehensive test cases
+- **[Deployment Guide](../scripts/deploy.sh)**: Production deployment automation
+
 ## 🚀 Quick Installation
 
 ### Python Package (Recommended)
@@ -72,14 +81,54 @@ pip install -e .[all,dev]
 For containerized deployment:
 
 ```bash
-# Pull official image
-docker pull gopnik/gopnik:latest
+# Pull official images
+docker pull gopnik/cli:latest
+docker pull gopnik/api:latest
+docker pull gopnik/web:latest
 
-# Run CLI
-docker run --rm -v $(pwd):/data gopnik/gopnik process /data/document.pdf
+# Run CLI container
+docker run --rm -v $(pwd):/home/gopnik/data gopnik/cli process document.pdf
 
-# Run web demo
-docker run -p 8000:8000 gopnik/gopnik:web
+# Run API server
+docker run -p 8000:80 gopnik/api
+
+# Run web interface
+docker run -p 8080:80 gopnik/web
+```
+
+### 4. Docker Compose (Recommended for Development)
+
+Complete development environment:
+
+```bash
+# Clone repository
+git clone https://github.com/happy2234/gopnik.git
+cd gopnik
+
+# Start development stack
+docker-compose up -d
+
+# Access services:
+# - API: http://localhost:8000/docs
+# - Web: http://localhost:8080
+# - Grafana: http://localhost:3000
+# - Prometheus: http://localhost:9090
+```
+
+### 5. Production Deployment
+
+Automated production deployment:
+
+```bash
+# Clone repository
+git clone https://github.com/happy2234/gopnik.git
+cd gopnik
+
+# Deploy production stack
+./scripts/deploy.sh
+
+# Or use production compose file
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
 ### 4. Desktop Application

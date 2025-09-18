@@ -20,10 +20,15 @@ Welcome to the Gopnik community wiki! This is a collaborative space where users 
 - **[Common Use Cases](Common-Use-Cases)**: Real-world scenarios and solutions
 
 ### User Guides
+- **[CLI Manual](../MANUAL_CLI.md)**: 📖 **NEW** - Comprehensive command-line interface manual
+- **[Web Manual](../MANUAL_WEB.md)**: 📖 **NEW** - Complete web interface documentation
+- **[API Manual](../MANUAL_API.md)**: 📖 **NEW** - Detailed REST API reference and integration guide
+- **[Usage Scenarios](../SCENARIOS.md)**: 📖 **NEW** - Real-world examples and comprehensive test cases
 - **[CLI Usage Guide](CLI-Usage-Guide)**: Complete command-line interface guide
 - **[CLI Quick Examples](CLI-Quick-Examples)**: Common CLI usage patterns
 - **[Web Demo Tutorial](Web-Demo-Tutorial)**: Using the web interface
-- **[API Integration Examples](API-Integration-Examples)**: REST API usage
+- **[REST API Guide](REST-API-Guide)**: Complete REST API documentation
+- **[API Integration Examples](API-Integration-Examples)**: REST API usage examples
 - **[Desktop App Guide](Desktop-App-Guide)**: Desktop application usage
 
 ### Configuration
@@ -44,7 +49,12 @@ Welcome to the Gopnik community wiki! This is a collaborative space where users 
 - **[Performance Optimization](Performance-Optimization)**: Memory and processing efficiency
 - **[Troubleshooting Guide](Troubleshooting-Guide)**: Common issues and solutions
 
-### Development
+### Development & Deployment
+- **[Docker Deployment](../docker-compose.yml)**: 🐳 **NEW** - Development environment with Docker Compose
+- **[Production Deployment](../docker-compose.prod.yml)**: 🚀 **NEW** - Production-ready container orchestration
+- **[Deployment Scripts](../scripts/deploy.sh)**: 🔧 **NEW** - Automated deployment and management tools
+- **[Configuration Management](../config/)**: ⚙️ **NEW** - Environment-specific configurations
+- **[Monitoring Setup](../docker/prometheus/)**: 📊 **NEW** - Comprehensive monitoring and alerting
 - **[Development Setup](Development-Setup)**: Setting up development environment
 - **[Contributing Guidelines](Contributing-Guidelines)**: How to contribute
 - **[Plugin Development](Plugin-Development)**: Creating plugins

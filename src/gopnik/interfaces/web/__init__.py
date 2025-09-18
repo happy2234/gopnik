@@ -1,9 +1,9 @@
 """
 Web interface components for Gopnik deidentification system.
 
-Provides a Cardio-based web demo with drag-and-drop functionality.
+Provides a web-based interface with welcome page and demo functionality.
 """
 
-# Web interface components will be implemented in later tasks
+from .routes import router, mount_static_files
 
-__all__ = []
+__all__ = ["router", "mount_static_files"]

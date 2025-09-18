@@ -1,5 +1,14 @@
 # Frequently Asked Questions (FAQ)
 
+## 📖 Documentation Quick Links
+
+Before diving into the FAQ, check out our comprehensive documentation:
+- **[CLI Manual](../MANUAL_CLI.md)**: Complete command-line interface guide
+- **[Web Manual](../MANUAL_WEB.md)**: Web interface documentation
+- **[API Manual](../MANUAL_API.md)**: REST API reference and integration guide
+- **[Usage Scenarios](../SCENARIOS.md)**: Real-world examples and test cases
+- **[Deployment Guide](user-guide/deployment.md)**: Production deployment guide
+
 ## 🔍 General Questions
 
 ### What is Gopnik?
@@ -36,6 +45,46 @@ Gopnik is an AI-powered forensic-grade deidentification toolkit that automatical
 - Credit card numbers
 - Medical record numbers
 - And many more...
+
+## 📚 Documentation and Learning
+
+### Where can I find complete documentation?
+
+Gopnik provides comprehensive documentation across multiple formats:
+
+**User Manuals:**
+- **[CLI Manual](../MANUAL_CLI.md)**: 50+ page comprehensive guide covering installation, usage, configuration, troubleshooting, and advanced scenarios
+- **[Web Manual](../MANUAL_WEB.md)**: Complete web interface documentation with tutorials and best practices
+- **[API Manual](../MANUAL_API.md)**: Detailed REST API reference with client libraries and integration examples
+
+**Practical Examples:**
+- **[Usage Scenarios](../SCENARIOS.md)**: Real-world examples for healthcare, legal, financial, government, and research use cases
+- **[Test Cases](../SCENARIOS.md#integration-test-cases)**: Comprehensive test scenarios and integration examples
+
+**Deployment:**
+- **[Docker Deployment](../docker-compose.yml)**: Development environment setup
+- **[Production Deployment](../docker-compose.prod.yml)**: Production-ready container orchestration
+- **[Deployment Scripts](../scripts/deploy.sh)**: Automated deployment and management tools
+
+### How do I get started quickly?
+
+1. **Choose your interface**: CLI, Web, or API
+2. **Read the relevant manual**: Each interface has a comprehensive manual
+3. **Try the examples**: Start with the usage scenarios that match your use case
+4. **Deploy easily**: Use Docker Compose for quick setup
+
+### What deployment options are available?
+
+**Development:**
+- Python package installation
+- Docker containers
+- Docker Compose development stack
+
+**Production:**
+- Automated deployment scripts
+- Production Docker Compose configuration
+- Kubernetes configurations (included)
+- Load balancing and monitoring setup
 
 ## 🚀 Installation and Setup
 

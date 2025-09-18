@@ -14,10 +14,22 @@ This guide covers how to publish Gopnik to the Python Package Index (PyPI) so us
    - Create tokens for both PyPI and Test PyPI
    - Store tokens securely
 
-### 2. GitHub Secrets Setup
+### 2. PyPI Trusted Publishing Setup (Recommended)
 
-Add the following secrets to your GitHub repository (Settings → Secrets and variables → Actions):
+**Modern Approach**: Use PyPI Trusted Publishing with OpenID Connect (OIDC) for secure, token-free publishing.
 
+#### Quick Setup:
+1. **Configure PyPI Trusted Publisher**:
+   - **PyPI Project Name**: `gopnik`
+   - **Owner**: `happy2234`
+   - **Repository name**: `gopnik`
+   - **Workflow name**: `publish-pypi.yml`
+   - **Environment name**: `pypi`
+
+2. **See detailed setup guide**: [PyPI Trusted Publishing Setup](docs/PYPI_TRUSTED_PUBLISHING_SETUP.md)
+
+#### Legacy Approach (API Tokens):
+If you prefer API tokens, add these secrets to your GitHub repository:
 - `PYPI_API_TOKEN`: Your PyPI API token
 - `TEST_PYPI_API_TOKEN`: Your Test PyPI API token
 - `PAT_TOKEN`: GitHub Personal Access Token (for creating releases)
@@ -277,8 +289,10 @@ The GitHub Actions workflow handles:
 - ✅ Publishing to PyPI
 - ✅ Creating GitHub releases
 - ✅ Updating documentation
+- ✅ **Secure OIDC authentication** (no API tokens needed)
+- ✅ **Environment-based protection** (additional security layer)
 
-This ensures consistent, reliable releases with minimal manual intervention.
+This ensures consistent, reliable, and secure releases with minimal manual intervention.
 
 ## Resources
 

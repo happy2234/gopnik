@@ -14,6 +14,12 @@ Gopnik is an AI-powered forensic-grade deidentification toolkit that automatical
 
 ## 📖 User Guides by Interface
 
+### Complete Documentation Suite
+- **[CLI Manual](../../MANUAL_CLI.md)**: 📖 **NEW** - Comprehensive command-line interface manual
+- **[Web Manual](../../MANUAL_WEB.md)**: 📖 **NEW** - Complete web interface documentation
+- **[API Manual](../../MANUAL_API.md)**: 📖 **NEW** - Detailed REST API reference and integration guide
+- **[Usage Scenarios](../../SCENARIOS.md)**: 📖 **NEW** - Real-world examples and comprehensive test cases
+
 ### Command Line Interface (CLI)
 - **[CLI Reference](cli-reference.md)**: Complete CLI documentation and reference
 - **[CLI Quick Start](cli-quickstart.md)**: Get started with the CLI in minutes
@@ -24,13 +30,18 @@ Gopnik is an AI-powered forensic-grade deidentification toolkit that automatical
 - **[Web Features](web-features.md)**: Available features and limitations
 
 ### REST API
-- **[API Overview](api.md)**: REST API documentation
+- **[API Overview](api.md)**: Complete REST API documentation
 - **[API Authentication](api-auth.md)**: Authentication and security
-- **[API Examples](api-examples.md)**: Integration examples
+- **[API Examples](api-examples.md)**: Integration examples and client libraries
 
 ### Desktop Application
 - **[Desktop Guide](desktop.md)**: Desktop application documentation
 - **[Desktop Features](desktop-features.md)**: Native app capabilities
+
+### Deployment & Operations
+- **[Docker Deployment](../../docker-compose.yml)**: 🐳 **NEW** - Development environment setup
+- **[Production Deployment](../../docker-compose.prod.yml)**: 🚀 **NEW** - Production container orchestration
+- **[Deployment Scripts](../../scripts/deploy.sh)**: 🔧 **NEW** - Automated deployment tools
 
 ## 🔧 Configuration and Customization
 

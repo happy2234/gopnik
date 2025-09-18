@@ -6,6 +6,7 @@ import pytest
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import List
 from unittest.mock import patch, MagicMock
 
 from src.gopnik.models.processing import (
@@ -120,23 +121,22 @@ class TestDocument:
     
     @patch('pathlib.Path.exists')
     @patch('pathlib.Path.stat')
-    def test_document_creation(self, mock_stat, mock_exists):
+    @patch('src.gopnik.models.processing.Document._calculate_file_hash')
+    def test_document_creation(self, mock_hash, mock_stat, mock_exists):
         """Test document creation."""
         mock_exists.return_value = True
         mock_stat.return_value = MagicMock(st_size=1024, st_ctime=1234567890, st_mtime=1234567890)
+        mock_hash.return_value = "test_hash_123"
         
-        with patch('builtins.open', create=True) as mock_open:
-            mock_open.return_value.__enter__.return_value.read.return_value = b'test content'
-            
-            doc = Document(
-                path=Path("test.pdf"),
-                format=DocumentFormat.PDF
-            )
-            
-            assert doc.path == Path("test.pdf")
-            assert doc.format == DocumentFormat.PDF
-            assert len(doc.id) > 0
-            assert doc.file_hash is not None
+        doc = Document(
+            path=Path("test.pdf"),
+            format=DocumentFormat.PDF
+        )
+        
+        assert doc.path == Path("test.pdf")
+        assert doc.format == DocumentFormat.PDF
+        assert len(doc.id) > 0
+        assert doc.file_hash == "test_hash_123"
     
     def test_document_format_auto_detection(self):
         """Test automatic format detection."""
@@ -179,25 +179,25 @@ class TestDocument:
     
     @patch('pathlib.Path.exists')
     @patch('pathlib.Path.stat')
-    def test_integrity_validation(self, mock_stat, mock_exists):
+    @patch('src.gopnik.models.processing.Document._calculate_file_hash')
+    def test_integrity_validation(self, mock_hash, mock_stat, mock_exists):
         """Test document integrity validation."""
         mock_exists.return_value = True
         mock_stat.return_value = MagicMock(st_size=1024)
         
-        with patch('builtins.open', create=True) as mock_open:
-            # First call for initial hash
-            mock_open.return_value.__enter__.return_value.read.return_value = b'test content'
-            
-            doc = Document(path=Path("test.pdf"), format=DocumentFormat.PDF)
-            original_hash = doc.file_hash
-            
-            # Second call for validation (same content)
-            mock_open.return_value.__enter__.return_value.read.return_value = b'test content'
-            assert doc.validate_integrity() is True
-            
-            # Third call for validation (different content)
-            mock_open.return_value.__enter__.return_value.read.return_value = b'different content'
-            assert doc.validate_integrity() is False
+        # Mock initial hash calculation
+        mock_hash.return_value = "original_hash_123"
+        
+        doc = Document(path=Path("test.pdf"), format=DocumentFormat.PDF)
+        original_hash = doc.file_hash
+        
+        # Test validation with same hash
+        mock_hash.return_value = "original_hash_123"
+        assert doc.validate_integrity() is True
+        
+        # Test validation with different hash
+        mock_hash.return_value = "different_hash_456"
+        assert doc.validate_integrity() is False
     
     def test_document_serialization(self):
         """Test document serialization."""
@@ -287,8 +287,10 @@ class TestProcessingMetrics:
 class TestProcessingResult:
     """Test ProcessingResult class functionality."""
     
-    def create_sample_document(self) -> Document:
+    @patch('src.gopnik.models.processing.Document._calculate_file_hash')
+    def create_sample_document(self, mock_hash) -> Document:
         """Create a sample document for testing."""
+        mock_hash.return_value = "sample_hash_123"
         with patch('pathlib.Path.exists', return_value=False):
             doc = Document(path=Path("test.pdf"), format=DocumentFormat.PDF)
             page = PageInfo(page_number=0, width=800, height=600)

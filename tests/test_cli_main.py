@@ -182,8 +182,7 @@ class TestGopnikCLI:
         
         mock_setup_logging.assert_called_once_with(
             level='INFO',
-            log_file=None,
-            format_type='cli'
+            log_file=None
         )
     
     @patch('src.gopnik.interfaces.cli.main.setup_logging')
@@ -200,8 +199,7 @@ class TestGopnikCLI:
         
         mock_setup_logging.assert_called_once_with(
             level='ERROR',
-            log_file=None,
-            format_type='cli'
+            log_file=None
         )
     
     @patch('src.gopnik.interfaces.cli.main.setup_logging')
@@ -218,8 +216,7 @@ class TestGopnikCLI:
         
         mock_setup_logging.assert_called_once_with(
             level='DEBUG',
-            log_file=Path('test.log'),
-            format_type='cli'
+            log_file=Path('test.log')
         )
     
     @patch('src.gopnik.config.GopnikConfig.from_file')

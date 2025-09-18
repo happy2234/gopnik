@@ -31,6 +31,31 @@ class DocumentProcessor(DocumentProcessorInterface):
     """
     
     def __init__(self, config: Optional[GopnikConfig] = None):
+        """
+        Initialize the DocumentProcessor with configuration and core components.
+        
+        Args:
+            config (Optional[GopnikConfig]): Configuration object containing processing
+                settings, AI engine parameters, and security options. If None, uses
+                default configuration.
+        
+        Example:
+            >>> from gopnik.config import GopnikConfig
+            >>> from gopnik.core.processor import DocumentProcessor
+            >>> 
+            >>> # Use default configuration
+            >>> processor = DocumentProcessor()
+            >>> 
+            >>> # Use custom configuration
+            >>> config = GopnikConfig()
+            >>> config.processing.confidence_threshold = 0.9
+            >>> processor = DocumentProcessor(config)
+        
+        Note:
+            The processor requires an AI engine to be set via set_ai_engine()
+            before processing documents. Audit system is optional but recommended
+            for production use.
+        """
         self.config = config or GopnikConfig()
         self.logger = logging.getLogger(__name__)
         
@@ -64,17 +89,76 @@ class DocumentProcessor(DocumentProcessorInterface):
     
     def process_document(self, input_path: Path, profile: RedactionProfile) -> ProcessingResult:
         """
-        Process a single document with the given redaction profile.
+        Process a single document for PII detection and redaction.
+        
+        This method orchestrates the complete document processing pipeline:
+        1. Document structure analysis and format validation
+        2. AI-powered PII detection using configured engines
+        3. Redaction application based on profile settings
+        4. Audit trail generation with cryptographic signatures
+        5. Integrity validation and metrics calculation
         
         Args:
-            input_path: Path to input document
-            profile: Redaction profile to apply
-            
+            input_path (Path): Path to the input document file. Must be a supported
+                format (PDF, PNG, JPEG, TIFF, BMP) and exist on the filesystem.
+            profile (RedactionProfile): Redaction profile defining which PII types
+                to detect, confidence thresholds, and redaction styles to apply.
+        
         Returns:
-            ProcessingResult with details of the operation
-            
+            ProcessingResult: Comprehensive result object containing:
+                - success (bool): Whether processing completed successfully
+                - output_path (Optional[Path]): Path to redacted document
+                - detections (List[PIIDetection]): All PII detections found
+                - detection_count (int): Number of detections
+                - processing_time (float): Total processing time in seconds
+                - metrics (ProcessingMetrics): Detailed performance metrics
+                - audit_log (Optional[AuditLog]): Audit trail if enabled
+                - error_message (Optional[str]): Error details if failed
+        
         Raises:
-            DocumentProcessingError: If processing fails
+            DocumentProcessingError: If document processing fails due to:
+                - Input file not found or inaccessible
+                - Unsupported document format
+                - AI engine not configured or unavailable
+                - Redaction engine failure
+                - Insufficient system resources
+            ValueError: If input parameters are invalid
+            IOError: If file system operations fail
+        
+        Example:
+            >>> from pathlib import Path
+            >>> from gopnik.core.processor import DocumentProcessor
+            >>> from gopnik.models.profiles import RedactionProfile
+            >>> from gopnik.ai.hybrid_engine import HybridAIEngine
+            >>> 
+            >>> # Initialize processor with AI engine
+            >>> processor = DocumentProcessor()
+            >>> ai_engine = HybridAIEngine()
+            >>> processor.set_ai_engine(ai_engine)
+            >>> 
+            >>> # Load redaction profile
+            >>> profile = RedactionProfile.from_yaml(Path("profiles/healthcare.yaml"))
+            >>> 
+            >>> # Process document
+            >>> result = processor.process_document(
+            ...     input_path=Path("medical_record.pdf"),
+            ...     profile=profile
+            ... )
+            >>> 
+            >>> if result.success:
+            ...     print(f"Processing completed successfully!")
+            ...     print(f"Found {result.detection_count} PII detections")
+            ...     print(f"Output saved to: {result.output_path}")
+            ...     print(f"Processing time: {result.processing_time:.2f} seconds")
+            ... else:
+            ...     print(f"Processing failed: {result.error_message}")
+        
+        Note:
+            - An AI engine must be configured via set_ai_engine() before processing
+            - Large documents may require significant memory and processing time
+            - Audit logging is enabled by default and creates cryptographic signatures
+            - The original document is never modified; redacted output is saved separately
+            - Processing metrics include timing for each pipeline stage
         """
         start_time = time.time()
         

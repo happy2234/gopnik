@@ -90,6 +90,7 @@ Wiki = "https://github.com/happy2234/gopnik/wiki"
 
 [project.scripts]
 gopnik = "gopnik.interfaces.cli.main:main"
+gopnik-api = "gopnik.interfaces.api.cli:serve"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

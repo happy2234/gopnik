@@ -2,6 +2,15 @@
 
 The Gopnik Command Line Interface (CLI) provides powerful document processing capabilities directly from your terminal. This guide covers practical usage examples and workflows.
 
+## 📖 Complete CLI Documentation
+
+For comprehensive CLI documentation, see our **[CLI Manual](../MANUAL_CLI.md)** which includes:
+- Complete command reference with all options
+- Advanced usage scenarios and examples
+- Configuration and customization
+- Troubleshooting and performance optimization
+- Integration with other tools and workflows
+
 ## Quick Start
 
 ### Installation and Setup

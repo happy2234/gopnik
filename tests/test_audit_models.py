@@ -6,6 +6,7 @@ import pytest
 import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from typing import List
 from unittest.mock import patch
 
 from src.gopnik.models.audit import (

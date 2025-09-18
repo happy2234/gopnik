@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gopnik Demo - AI-Powered Deidentification</title>
+    <link rel="stylesheet" href="/static/css/demo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app" class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="/">
+                        <h1>Gopnik</h1>
+                        <span class="tagline">Demo</span>
+                    </a>
+                </div>
+                <nav class="nav">
+                    <a href="/" class="nav-link">← Back to Home</a>
+                    <a href="/docs" class="nav-link">Documentation</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <div class="demo-layout">
+                    <!-- Upload Section -->
+                    <section class="upload-section">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-upload"></i> Upload Document</h2>
+                                <p>Drag and drop a document or click to select</p>
+                            </div>
+                            <div class="card-body">
+                                <div id="dropzone" class="dropzone">
+                                    <div class="dropzone-content">
+                                        <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+                                        <p class="dropzone-text">Drop your document here</p>
+                                        <p class="dropzone-subtext">or <button class="btn-link" onclick="document.getElementById('fileInput').click()">browse files</button></p>
+                                        <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.tiff" style="display: none;">
+                                    </div>
+                                    <div class="dropzone-formats">
+                                        <span class="format-tag">PDF</span>
+                                        <span class="format-tag">PNG</span>
+                                        <span class="format-tag">JPG</span>
+                                        <span class="format-tag">TIFF</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- File Info -->
+                                <div id="fileInfo" class="file-info" style="display: none;">
+                                    <div class="file-details">
+                                        <i class="fas fa-file-alt"></i>
+                                        <div class="file-meta">
+                                            <span class="file-name"></span>
+                                            <span class="file-size"></span>
+                                        </div>
+                                        <button class="btn-remove" onclick="removeFile()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Profile Selection -->
+                    <section class="profile-section">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-cog"></i> Redaction Profile</h2>
+                                <p>Choose how to handle different types of PII</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="profile-selector">
+                                    <div class="profile-option active" data-profile="default">
+                                        <div class="profile-header">
+                                            <i class="fas fa-shield-alt"></i>
+                                            <h3>Default</h3>
+                                        </div>
+                                        <p>Standard redaction for common PII types</p>
+                                        <div class="profile-features">
+                                            <span class="feature-tag">Names</span>
+                                            <span class="feature-tag">Emails</span>
+                                            <span class="feature-tag">Phone Numbers</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="profile-option" data-profile="healthcare">
+                                        <div class="profile-header">
+                                            <i class="fas fa-heartbeat"></i>
+                                            <h3>Healthcare (HIPAA)</h3>
+                                        </div>
+                                        <p>HIPAA-compliant redaction for medical documents</p>
+                                        <div class="profile-features">
+                                            <span class="feature-tag">PHI</span>
+                                            <span class="feature-tag">Medical IDs</span>
+                                            <span class="feature-tag">Dates</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="profile-option" data-profile="financial">
+                                        <div class="profile-header">
+                                            <i class="fas fa-university"></i>
+                                            <h3>Financial</h3>
+                                        </div>
+                                        <p>Financial data protection and compliance</p>
+                                        <div class="profile-features">
+                                            <span class="feature-tag">SSN</span>
+                                            <span class="feature-tag">Account Numbers</span>
+                                            <span class="feature-tag">Credit Cards</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Processing Controls -->
+                    <section class="controls-section">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="controls">
+                                    <button id="processBtn" class="btn btn-primary" disabled>
+                                        <i class="fas fa-play"></i>
+                                        Process Document
+                                    </button>
+                                    <div class="processing-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="previewMode" checked>
+                                            <span class="checkmark"></span>
+                                            Show preview before download
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="auditTrail" checked>
+                                            <span class="checkmark"></span>
+                                            Generate audit trail
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Processing Status -->
+                <div id="processingStatus" class="processing-status" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-cogs"></i> Processing Document</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span id="progressPercent">0%</span>
+                                    <span id="progressStatus">Initializing...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="processing-steps">
+                                <div class="step" id="step-upload">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Uploading document</span>
+                                    <div class="step-status"></div>
+                                </div>
+                                <div class="step" id="step-analyze">
+                                    <i class="fas fa-search"></i>
+                                    <span>Analyzing content</span>
+                                    <div class="step-status"></div>
+                                </div>
+                                <div class="step" id="step-detect">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Detecting PII</span>
+                                    <div class="step-status"></div>
+                                </div>
+                                <div class="step" id="step-redact">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Applying redactions</span>
+                                    <div class="step-status"></div>
+                                </div>
+                                <div class="step" id="step-complete">
+                                    <i class="fas fa-check"></i>
+                                    <span>Finalizing</span>
+                                    <div class="step-status"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultsSection" class="results-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-check-circle"></i> Processing Complete</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="results-summary">
+                                <div class="summary-item">
+                                    <div class="summary-number" id="piiCount">0</div>
+                                    <div class="summary-label">PII Items Found</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-number" id="redactionCount">0</div>
+                                    <div class="summary-label">Redactions Applied</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-number" id="confidenceScore">0%</div>
+                                    <div class="summary-label">Avg. Confidence</div>
+                                </div>
+                            </div>
+                            
+                            <div class="results-actions">
+                                <button class="btn btn-primary" id="downloadBtn">
+                                    <i class="fas fa-download"></i>
+                                    Download Redacted Document
+                                </button>
+                                <button class="btn btn-secondary" id="previewBtn">
+                                    <i class="fas fa-eye"></i>
+                                    Preview Changes
+                                </button>
+                                <button class="btn btn-secondary" id="auditBtn">
+                                    <i class="fas fa-file-alt"></i>
+                                    View Audit Trail
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Sidebar -->
+                <aside class="help-sidebar">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-question-circle"></i> Help & Tips</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="help-section">
+                                <h4>Supported Formats</h4>
+                                <ul>
+                                    <li>PDF documents</li>
+                                    <li>PNG, JPG, JPEG images</li>
+                                    <li>TIFF files</li>
+                                    <li>Max size: 10MB</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="help-section">
+                                <h4>PII Detection</h4>
+                                <ul>
+                                    <li>Names and personal identifiers</li>
+                                    <li>Email addresses</li>
+                                    <li>Phone numbers</li>
+                                    <li>Social Security Numbers</li>
+                                    <li>Addresses</li>
+                                    <li>Credit card numbers</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="help-section">
+                                <h4>Security</h4>
+                                <ul>
+                                    <li>Files processed locally</li>
+                                    <li>No data stored on servers</li>
+                                    <li>Automatic cleanup after processing</li>
+                                    <li>Cryptographic audit trails</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="help-section">
+                                <h4>Need More?</h4>
+                                <p>For batch processing and advanced features, try our <a href="/">CLI tool</a> or <a href="/docs/api">REST API</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/demo.js"></script>
+</body>
+</html>

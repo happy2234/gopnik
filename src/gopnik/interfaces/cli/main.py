@@ -238,6 +238,46 @@ Examples:
         )
         ProfileCommand.add_arguments(profile_parser)
         
+        # API command
+        api_parser = subparsers.add_parser(
+            'api',
+            help='Start the REST API server',
+            description='Start the Gopnik REST API server for programmatic access.',
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog="""
+Examples:
+  # Start API server on default port (8000)
+  gopnik api
+  
+  # Start on custom host and port
+  gopnik api --host 0.0.0.0 --port 8080
+  
+  # Start in development mode with auto-reload
+  gopnik api --reload --log-level debug
+  
+  # Access interactive documentation:
+  # Swagger UI: http://localhost:8000/docs
+  # ReDoc: http://localhost:8000/redoc
+  # OpenAPI spec: http://localhost:8000/openapi.json
+            """
+        )
+        api_parser.add_argument(
+            '--host',
+            default='127.0.0.1',
+            help='Host to bind to (default: 127.0.0.1)'
+        )
+        api_parser.add_argument(
+            '--port',
+            type=int,
+            default=8000,
+            help='Port to bind to (default: 8000)'
+        )
+        api_parser.add_argument(
+            '--reload',
+            action='store_true',
+            help='Enable auto-reload for development'
+        )
+        
         return parser
     
     def setup_logging_from_args(self, args: argparse.Namespace) -> None:
@@ -253,8 +293,7 @@ Examples:
         # Setup logging
         setup_logging(
             level=log_level,
-            log_file=args.log_file,
-            format_type='cli'
+            log_file=args.log_file
         )
         
         self.logger = logging.getLogger(__name__)
@@ -311,6 +350,25 @@ Examples:
             elif args.command == 'profile':
                 command = ProfileCommand(self.config)
                 return command.execute(args)
+            
+            elif args.command == 'api':
+                # Import here to avoid dependency issues if FastAPI not installed
+                try:
+                    from ..api.app import run_server
+                    self.logger.info(f"Starting Gopnik API server on {args.host}:{args.port}")
+                    if args.reload:
+                        self.logger.info("Auto-reload enabled (development mode)")
+                    run_server(host=args.host, port=args.port, reload=args.reload)
+                    return 0
+                except ImportError:
+                    self.logger.error("FastAPI dependencies not installed. Install with: pip install gopnik[web]")
+                    return 1
+                except KeyboardInterrupt:
+                    self.logger.info("API server stopped")
+                    return 0
+                except Exception as e:
+                    self.logger.error(f"Failed to start API server: {e}")
+                    return 1
             
             else:
                 self.logger.error(f"Unknown command: {args.command}")
