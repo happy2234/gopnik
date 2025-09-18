@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
     - uses: actions/checkout@v4
@@ -33,6 +33,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[web,dev]
+        
+        # Verify httpx is installed
+        python -c "import httpx; print(f'httpx version: {httpx.__version__}')"
+        
+        # Verify FastAPI TestClient works
+        python -c "from fastapi.testclient import TestClient; print('FastAPI TestClient available')"
 
     - name: Test API structure
       run: |
