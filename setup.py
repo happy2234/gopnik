@@ -36,6 +36,7 @@ setup(
         
         # File processing
         "pillow>=9.0.0",
+        "pymupdf>=1.23.0",
         
         # Logging and utilities
         "colorama>=0.4.4",
@@ -54,6 +55,7 @@ setup(
             "transformers>=4.30.0",
             "opencv-python>=4.8.0",
             "numpy>=1.24.0",
+            "pymupdf>=1.23.0",
         ],
         "dev": [
             "pytest>=7.0.0",
@@ -72,6 +74,7 @@ setup(
             "transformers>=4.30.0",
             "opencv-python>=4.8.0",
             "numpy>=1.24.0",
+            "pymupdf>=1.23.0",
         ]
     },
     entry_points={

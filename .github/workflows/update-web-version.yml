@@ -24,6 +24,12 @@ jobs:
       with:
         token: ${{ secrets.PAT_TOKEN }}
         fetch-depth: 0
+        
+    - name: Pull latest changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git pull origin main --rebase
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -107,13 +113,16 @@ jobs:
         }
         EOF
 
-    - name: Commit changes
+    - name: Commit and push changes
       run: |
         VERSION="${{ github.event.inputs.version || '0.1.0' }}"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add -A
-        git diff --staged --quiet || git commit -m "chore: update Web Demo version to $VERSION
+        
+        # Only commit if there are changes
+        if ! git diff --staged --quiet; then
+          git commit -m "chore: update Web Demo version to $VERSION
 
         - Updated version references in welcome page
         - Updated README with new web demo version
@@ -121,14 +130,13 @@ jobs:
         - Updated web demo status and configuration
         
         [skip ci]"
-
-    - name: Push changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add -A
-        git diff --staged --quiet || git commit -m "chore: Update Web version to ${{ github.event.inputs.version }}"
-        git push origin main
+          
+          # Pull latest changes before pushing to handle any conflicts
+          git pull origin main --rebase
+          git push origin main
+        else
+          echo "No changes to commit"
+        fi
 
     - name: Deploy to demo environment
       if: github.event.inputs.version
@@ -141,6 +149,8 @@ jobs:
       if: github.event.inputs.version
       run: |
         VERSION="${{ github.event.inputs.version }}"
+        # Pull latest changes before creating tag
+        git pull origin main --rebase
         git tag -a "web-v$VERSION" -m "Web Demo Release v$VERSION"
         git push origin "web-v$VERSION"
 

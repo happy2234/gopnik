@@ -8,10 +8,17 @@ import logging
 import mimetypes
 from PIL import Image
 import fitz  # PyMuPDF
-import numpy as np
 
 from ..models.processing import Document, DocumentFormat, PageInfo
 from ..models.errors import DocumentProcessingError
+
+# Optional numpy import for advanced features
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
 
 
 class DocumentAnalyzer:

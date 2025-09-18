@@ -24,6 +24,12 @@ jobs:
       with:
         token: ${{ secrets.PAT_TOKEN }}
         fetch-depth: 0
+        
+    - name: Pull latest changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git pull origin main --rebase
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -137,13 +143,16 @@ jobs:
         }
         EOF
 
-    - name: Commit changes
+    - name: Commit and push changes
       run: |
         VERSION="${{ github.event.inputs.version || '0.1.0' }}"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add -A
-        git diff --staged --quiet || git commit -m "chore: update Desktop version to $VERSION
+        
+        # Only commit if there are changes
+        if ! git diff --staged --quiet; then
+          git commit -m "chore: update Desktop version to $VERSION
 
         - Updated version references in welcome page
         - Updated README with new desktop version
@@ -151,14 +160,13 @@ jobs:
         - Updated desktop app metadata and installer config
         
         [skip ci]"
-
-    - name: Push changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add -A
-        git diff --staged --quiet || git commit -m "chore: Update Desktop version to ${{ github.event.inputs.version }}"
-        git push origin main
+          
+          # Pull latest changes before pushing to handle any conflicts
+          git pull origin main --rebase
+          git push origin main
+        else
+          echo "No changes to commit"
+        fi
 
     - name: Build desktop packages
       if: github.event.inputs.version
@@ -171,6 +179,8 @@ jobs:
       if: github.event.inputs.version
       run: |
         VERSION="${{ github.event.inputs.version }}"
+        # Pull latest changes before creating tag
+        git pull origin main --rebase
         git tag -a "desktop-v$VERSION" -m "Desktop Release v$VERSION"
         git push origin "desktop-v$VERSION"
 

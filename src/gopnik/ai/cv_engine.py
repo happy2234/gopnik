@@ -8,12 +8,20 @@ faces, signatures, barcodes, and other visual elements.
 import logging
 from typing import List, Dict, Any, Optional, Union, Tuple
 from pathlib import Path
-import numpy as np
 from PIL import Image
-import cv2
 
 from ..core.interfaces import AIEngineInterface
 from ..models.pii import PIIDetection, PIIType, BoundingBox
+
+# Optional AI dependencies
+try:
+    import numpy as np
+    import cv2
+    HAS_CV_DEPS = True
+except ImportError:
+    np = None
+    cv2 = None
+    HAS_CV_DEPS = False
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +44,16 @@ class ComputerVisionEngine(AIEngineInterface):
         
         Args:
             config: Configuration dictionary for the engine
+            
+        Raises:
+            ImportError: If required CV dependencies are not installed
         """
+        if not HAS_CV_DEPS:
+            raise ImportError(
+                "Computer Vision dependencies not installed. "
+                "Install with: pip install gopnik[ai]"
+            )
+            
         self.config = config or {}
         self.models = {}
         self.is_initialized = False
