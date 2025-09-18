@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build script for Netlify deployment.
+Build script for Netlify deployment - Static site only.
 """
 
 import os
@@ -36,51 +36,88 @@ def main():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gopnik Web Demo</title>
+    <title>Gopnik - AI-Powered Deidentification Toolkit</title>
     <base href="/">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; }
-        .feature { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; }
-        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
-        .btn:hover { background: #0056b3; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; color: white; margin-bottom: 40px; }
+        .header h1 { font-size: 3rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .header p { font-size: 1.2rem; opacity: 0.9; }
+        .card { background: white; border-radius: 15px; padding: 30px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: #667eea; margin-bottom: 15px; font-size: 1.5rem; }
+        .btn { display: inline-block; padding: 12px 24px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 25px; margin: 10px 10px 10px 0; transition: all 0.3s ease; font-weight: 500; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 40px 0; }
+        .feature-item { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; color: white; }
+        .feature-item h4 { margin-bottom: 10px; color: #fff; }
+        .install-code { background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: 'Monaco', 'Menlo', monospace; margin: 15px 0; }
+        .footer { text-align: center; color: rgba(255,255,255,0.8); margin-top: 60px; }
+        @media (max-width: 768px) { .header h1 { font-size: 2rem; } .container { padding: 15px; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔒 Gopnik Web Demo</h1>
-        <p>AI-powered document deidentification toolkit</p>
-        
-        <div class="feature">
-            <h3>🚀 Quick Start</h3>
-            <p>Install Gopnik and start processing documents:</p>
-            <code>pip install gopnik</code>
+        <div class="header">
+            <h1>🔒 Gopnik</h1>
+            <p>AI-Powered Forensic-Grade Document Deidentification</p>
         </div>
         
-        <div class="feature">
-            <h3>🌐 API Demo</h3>
-            <p>Try the API endpoints:</p>
-            <a href="/api/health" class="btn">Health Check</a>
-            <a href="/api/docs" class="btn">API Documentation</a>
+        <div class="card">
+            <h3>� Quiuck Start</h3>
+            <p>Get started with Gopnik in seconds. Install via pip and start processing documents immediately.</p>
+            <div class="install-code">pip install gopnik</div>
+            <div class="install-code">gopnik process document.pdf --profile healthcare</div>
         </div>
         
-        <div class="feature">
-            <h3>📖 Documentation</h3>
-            <p>Learn more about Gopnik:</p>
-            <a href="https://happy2234.github.io/gopnik/" class="btn">Documentation</a>
-            <a href="https://github.com/happy2234/gopnik" class="btn">GitHub</a>
+        <div class="features">
+            <div class="feature-item">
+                <h4>🤖 AI-Powered Detection</h4>
+                <p>Advanced computer vision and NLP for comprehensive PII detection</p>
+            </div>
+            <div class="feature-item">
+                <h4>📄 Multiple Formats</h4>
+                <p>Support for PDF, images, and complex document layouts</p>
+            </div>
+            <div class="feature-item">
+                <h4>⚡ Batch Processing</h4>
+                <p>Process thousands of documents with progress tracking</p>
+            </div>
+            <div class="feature-item">
+                <h4>🔐 Forensic Grade</h4>
+                <p>Cryptographic audit trails and integrity validation</p>
+            </div>
         </div>
         
-        <div class="feature">
-            <h3>✨ Features</h3>
-            <ul>
-                <li>AI-powered PII detection</li>
-                <li>Multiple document formats</li>
-                <li>Batch processing</li>
-                <li>Audit trails</li>
-                <li>Profile management</li>
-            </ul>
+        <div class="card">
+            <h3>📖 Documentation & Resources</h3>
+            <p>Everything you need to get started with Gopnik deidentification.</p>
+            <a href="https://happy2234.github.io/gopnik/" class="btn">📚 Documentation</a>
+            <a href="https://github.com/happy2234/gopnik" class="btn">💻 GitHub</a>
+            <a href="https://github.com/happy2234/gopnik/discussions" class="btn">💬 Discussions</a>
+            <a href="https://pypi.org/project/gopnik/" class="btn">📦 PyPI</a>
+        </div>
+        
+        <div class="card">
+            <h3>🛠️ CLI Commands</h3>
+            <p>Powerful command-line interface for all your deidentification needs.</p>
+            <div class="install-code">
+# Process a single document<br>
+gopnik process document.pdf --profile healthcare<br><br>
+# Batch process a directory<br>
+gopnik batch /documents --profile default --recursive<br><br>
+# Validate document integrity<br>
+gopnik validate document.pdf --audit-dir /logs<br><br>
+# Manage profiles<br>
+gopnik profile list --verbose
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Built with ❤️ for privacy and security • Open Source MIT License</p>
+            <p>Deploy your own: <a href="https://app.netlify.com/start/deploy?repository=https://github.com/happy2234/gopnik" style="color: #fff;">Deploy to Netlify</a></p>
         </div>
     </div>
 </body>
@@ -90,21 +127,22 @@ def main():
         f.write(index_content)
     print("✅ Created index.html")
     
-    # Create _redirects file for SPA routing
-    redirects_content = """# API routes to serverless functions
-/api/*  /.netlify/functions/api/:splat  200
+    # Create _redirects file (simplified)
+    redirects_content = """# Redirect API calls to documentation for now
+/api/* https://happy2234.github.io/gopnik/user-guide/api/ 302
 
 # SPA fallback
-/*  /index.html  200"""
+/* /index.html 200"""
     
     with open(dist_dir / "_redirects", 'w') as f:
         f.write(redirects_content)
     print("✅ Created _redirects file")
     
-    # Create netlify deployment info
+    # Create deployment info
     deploy_info = {
         "name": "gopnik-web-demo",
         "version": "0.1.0",
+        "type": "static-site",
         "build_time": "2024",
         "status": "active"
     }
