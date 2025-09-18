@@ -5,7 +5,7 @@ Error handling and reporting utilities for CLI.
 import sys
 import traceback
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from pathlib import Path
 
 
@@ -194,7 +194,7 @@ class ErrorReporter:
             else:
                 return f"Error: {str(error)}"
     
-    def suggest_solutions(self, error: Exception) -> list[str]:
+    def suggest_solutions(self, error: Exception) -> List[str]:
         """
         Suggest possible solutions for common errors.
         
