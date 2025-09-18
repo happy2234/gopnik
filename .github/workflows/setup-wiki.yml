@@ -225,7 +225,7 @@ jobs:
           echo "⚠️  Wiki may not be publicly accessible yet (this is normal for new wikis)"
         fi
 
-    - name: Update repository with wiki status
+    - name: Update repository with wiki status and push
       if: steps.check_wiki.outputs.wiki_exists == 'true'
       run: |
         # Create a status file
@@ -240,24 +240,27 @@ jobs:
         }
         EOF
         
-        # Commit status file to main repository
+        # Configure git
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        
+        # Add status file
         git add wiki-status.json
         
+        # Only commit and push if there are changes
         if ! git diff --staged --quiet; then
           git commit -m "📊 Update wiki status
 
           - Wiki setup completed successfully
           - $(ls wiki-repo/*.md 2>/dev/null | wc -l) pages available
           - Auto-sync enabled via GitHub Actions"
+          
+          # Pull latest changes before pushing to handle any conflicts
+          git pull origin ${{ github.ref_name }} --rebase
+          git push origin ${{ github.ref_name }}
+        else
+          echo "No changes to commit for wiki status"
         fi
-
-    - name: Push wiki status update
-      if: steps.check_wiki.outputs.wiki_exists == 'true'
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.PAT_TOKEN }}
-        branch: ${{ github.ref_name }}
-        force: false
 
     - name: Post setup instructions
       if: steps.check_wiki.outputs.wiki_exists == 'true'
