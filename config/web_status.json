@@ -2,7 +2,7 @@
   "version": "1",
   "last_updated": "2025-09-18",
   "status": "active",
-  "demo_url": "https://gopnik-demo.example.com",
+  "demo_url": null,
   "features": [
     "Drag-and-drop file upload",
     "Real-time processing status",

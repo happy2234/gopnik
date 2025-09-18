@@ -31,10 +31,7 @@ The Gopnik Web Interface provides an intuitive, browser-based solution for docum
 
 ### Accessing the Web Interface
 
-#### Option 1: Public Demo
-Visit the live demo at: **https://gopnik-demo.example.com**
-
-#### Option 2: Local Installation
+#### Option 1: Local Installation
 ```bash
 # Install Gopnik with web interface
 pip install gopnik[web]

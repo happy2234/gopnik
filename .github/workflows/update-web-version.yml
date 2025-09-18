@@ -103,7 +103,7 @@ jobs:
           "version": "${{ github.event.inputs.version || '0.1.0' }}",
           "last_updated": "${{ steps.date.outputs.date }}",
           "status": "active",
-          "demo_url": "https://gopnik-demo.example.com",
+          "demo_url": null,
           "features": [
             "Drag-and-drop file upload",
             "Real-time processing status",
@@ -165,8 +165,8 @@ jobs:
         body: |
           ## Gopnik Web Demo v${{ github.event.inputs.version }}
           
-          ### 🌐 Try the Demo
-          [Launch Web Demo](https://gopnik-demo.example.com)
+          ### 🚀 Get Started
+          [Installation Guide](https://happy2234.github.io/gopnik/user-guide/cli-quickstart/)
           
           ### ✨ Features
           - Drag-and-drop file upload

@@ -7,7 +7,7 @@
 
 Gopnik is an open-source, AI-powered forensic-grade deidentification toolkit that automatically detects and redacts Personally Identifiable Information (PII) from complex, visually-rich documents while preserving document structure and providing verifiable audit trails.
 
-🚀 **[Try the Web Demo](https://gopnik-demo.example.com)** | 📖 **[Documentation](https://happy2234.github.io/gopnik/)** | 💬 **[Discussions](https://github.com/happy2234/gopnik/discussions)**
+🚀 **[Get Started](https://happy2234.github.io/gopnik/user-guide/cli-quickstart/)** | 📖 **[Documentation](https://happy2234.github.io/gopnik/)** | 💬 **[Discussions](https://github.com/happy2234/gopnik/discussions)**
 
 ## ✨ Features
 
