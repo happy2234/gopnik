@@ -136,3 +136,39 @@ def get_version_info():
 templates.env.globals.update({
     "get_version_info": get_version_info
 })
+
+
+def create_demo_app():
+    """
+    Create FastAPI application for web demo.
+    
+    Returns:
+        FastAPI application instance
+    """
+    from fastapi import FastAPI
+    from fastapi.middleware.cors import CORSMiddleware
+    
+    app = FastAPI(
+        title="Gopnik Web Demo",
+        description="AI-powered document deidentification web interface",
+        version="0.1.0",
+        docs_url="/docs",
+        redoc_url="/redoc"
+    )
+    
+    # Add CORS middleware for demo
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # In production, specify actual origins
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
+    # Include routes
+    app.include_router(router)
+    
+    # Mount static files
+    mount_static_files(app)
+    
+    return app

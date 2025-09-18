@@ -1,0 +1,64 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/gopnik/interfaces/web/**'
+      - 'netlify/**'
+      - 'scripts/build-netlify.py'
+      - '.github/workflows/deploy-netlify.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - preview
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install -r netlify/requirements.txt
+
+    - name: Build for Netlify
+      run: |
+        python scripts/build-netlify.py
+
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: './netlify/dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions - ${{ github.sha }}"
+        enable-pull-request-comment: true
+        enable-commit-comment: true
+        overwrites-pull-request-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+    - name: Update deployment status
+      if: success()
+      run: |
+        echo "🚀 Deployment successful!"
+        echo "📱 Web Demo URL will be available in the deployment comment"
+        echo "📊 Check Netlify dashboard for deployment details"
