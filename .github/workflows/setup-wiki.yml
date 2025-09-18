@@ -249,10 +249,15 @@ jobs:
           - Wiki setup completed successfully
           - $(ls wiki-repo/*.md 2>/dev/null | wc -l) pages available
           - Auto-sync enabled via GitHub Actions"
-          
-          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-          git push origin ${{ github.ref_name }}
         fi
+
+    - name: Push wiki status update
+      if: steps.check_wiki.outputs.wiki_exists == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PAT_TOKEN }}
+        branch: ${{ github.ref_name }}
+        force: false
 
     - name: Post setup instructions
       if: steps.check_wiki.outputs.wiki_exists == 'true'
