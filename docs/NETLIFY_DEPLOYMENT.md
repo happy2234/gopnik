@@ -20,9 +20,9 @@ This guide explains how to deploy the Gopnik web demo to Netlify.
    - Choose GitHub and select your forked repository
 
 4. **Configure build settings**:
-   - Build command: `pip install -e . && python scripts/build-netlify.py`
+   - Build command: `python scripts/build-netlify.py`
    - Publish directory: `netlify/dist`
-   - Functions directory: `netlify/functions`
+   - Leave Functions directory empty
 
 5. **Deploy!** - Netlify will automatically build and deploy your site
 
