@@ -96,9 +96,6 @@ jobs:
         else
           echo '⚠️ Coverage file not found, skipping threshold check'
         fi
-        else:
-            print('✅ Coverage meets 80% threshold')
-        "
 
   integration-tests:
     name: Integration Tests
