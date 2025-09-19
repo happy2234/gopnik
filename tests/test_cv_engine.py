@@ -4,8 +4,15 @@ Unit tests for Computer Vision PII Detection Engine.
 
 import unittest
 from unittest.mock import Mock, patch, MagicMock
-import numpy as np
 from PIL import Image
+
+# Optional numpy import for CV tests
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
 import tempfile
 import os
 
@@ -23,6 +30,9 @@ class TestComputerVisionEngine(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
+        if not HAS_NUMPY:
+            self.skipTest("Numpy not available - CV tests require [ai] extras")
+            
         self.config = {
             'face_detection': {
                 'enabled': True,
@@ -297,6 +307,8 @@ class TestMockDetectors(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
+        if not HAS_NUMPY:
+            self.skipTest("Numpy not available - CV tests require [ai] extras")
         self.test_image = np.random.randint(0, 255, (400, 600, 3), dtype=np.uint8)
     
     def test_mock_face_detector(self):
@@ -358,6 +370,8 @@ class TestBarcodeDetector(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
+        if not HAS_NUMPY:
+            self.skipTest("Numpy not available - CV tests require [ai] extras")
         self.detector = BarcodeDetector()
         self.test_image = np.random.randint(0, 255, (400, 600, 3), dtype=np.uint8)
     

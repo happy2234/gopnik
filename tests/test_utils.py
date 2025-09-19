@@ -11,12 +11,19 @@ import pytest
 import json
 import yaml
 from PIL import Image
-import numpy as np
 
 from src.gopnik.models.pii import PIIDetection, PIIType, BoundingBox
 from src.gopnik.models.processing import ProcessingResult, ProcessingStatus
 from src.gopnik.models.profiles import RedactionProfile
 from src.gopnik.models.audit import AuditLog, AuditOperation, AuditLevel
+
+# Optional numpy import for AI-related tests
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
 
 
 class TestDataGenerator:
@@ -26,13 +33,27 @@ class TestDataGenerator:
     def create_test_image(width: int = 800, height: int = 600, 
                          format: str = "RGB") -> Image.Image:
         """Create a test image with random content."""
-        # Create random image data
-        if format == "RGB":
-            data = np.random.randint(0, 256, (height, width, 3), dtype=np.uint8)
+        if HAS_NUMPY:
+            # Create random image data using numpy
+            if format == "RGB":
+                data = np.random.randint(0, 256, (height, width, 3), dtype=np.uint8)
+            else:
+                data = np.random.randint(0, 256, (height, width), dtype=np.uint8)
+            return Image.fromarray(data, format)
         else:
-            data = np.random.randint(0, 256, (height, width), dtype=np.uint8)
-        
-        return Image.fromarray(data, format)
+            # Create simple test image without numpy
+            import random
+            if format == "RGB":
+                # Create RGB image with random colors
+                pixels = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) 
+                         for _ in range(width * height)]
+            else:
+                # Create grayscale image
+                pixels = [random.randint(0, 255) for _ in range(width * height)]
+            
+            img = Image.new(format, (width, height))
+            img.putdata(pixels)
+            return img
     
     @staticmethod
     def create_test_document_with_pii(temp_dir: Path) -> Path:

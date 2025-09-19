@@ -3,8 +3,15 @@ Integration tests for AI engine components.
 """
 
 import unittest
-import numpy as np
 from PIL import Image
+
+# Optional numpy import for AI tests
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
 
 from src.gopnik.ai import ComputerVisionEngine, NLPEngine, HybridAIEngine
 from src.gopnik.models.pii import PIIType
@@ -26,7 +33,10 @@ class TestAIEngineIntegration(unittest.TestCase):
         """
         
         # Create a simple test image
-        self.test_image = np.random.randint(0, 255, (400, 600, 3), dtype=np.uint8)
+        if HAS_NUMPY:
+            self.test_image = np.random.randint(0, 255, (400, 600, 3), dtype=np.uint8)
+        else:
+            self.skipTest("Numpy not available - AI tests require [ai] extras")
     
     def test_cv_engine_standalone(self):
         """Test CV engine standalone functionality."""
