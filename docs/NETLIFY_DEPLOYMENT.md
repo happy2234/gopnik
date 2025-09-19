@@ -4,9 +4,19 @@ This guide explains how to deploy the Gopnik web demo to Netlify.
 
 ## 🚀 Quick Deploy
 
-### Option 1: One-Click Deploy (Recommended)
+### Option 1: Manual Upload (Recommended - Avoids Config Issues)
+
+1. **Clone the repository** locally
+2. **Run the build script**: `python scripts/build-netlify.py`
+3. **Go to** [netlify.com](https://netlify.com) and sign up
+4. **Drag and drop** the `netlify/dist` folder to Netlify dashboard
+5. **Done!** Your site will be live immediately
+
+### Option 2: One-Click Deploy
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/happy2234/gopnik)
+
+*Note: If you encounter configuration parsing errors, use Option 1 instead.*
 
 ### Option 2: Manual Setup
 

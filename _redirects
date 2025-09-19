@@ -1,0 +1,5 @@
+# Redirect API calls to documentation for now
+/api/* https://happy2234.github.io/gopnik/user-guide/api/ 302
+
+# SPA fallback
+/* /index.html 200

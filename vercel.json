@@ -1,0 +1,12 @@
+{
+  "buildCommand": "python scripts/build-netlify.py",
+  "outputDirectory": "netlify/dist",
+  "installCommand": "echo 'No install needed'",
+  "redirects": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://happy2234.github.io/gopnik/user-guide/api/",
+      "statusCode": 302
+    }
+  ]
+}
