@@ -1,3 +1,93 @@
 [build]
-  command = "python3 build.py"
+  # Build command for static site
+  command = "python scripts/build-netlify.py"
+  # Publish directory
   publish = "netlify/dist"
+  # Functions directory for serverless functions
+  functions = "netlify/functions"
+
+[build.environment]
+  # Python version
+  PYTHON_VERSION = "3.11"
+  # Node.js version (for any JS dependencies)
+  NODE_VERSION = "18"
+  # Build environment
+  GOPNIK_ENV = "production"
+  # Disable AI models for static build (they're too large for Netlify)
+  GOPNIK_AI_ENABLED = "false"
+
+# Redirects for SPA and API routing
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Redirect to documentation for API calls
+[[redirects]]
+  from = "/docs/*"
+  to = "https://happy2234.github.io/gopnik/:splat"
+  status = 302
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.github.com;"
+
+# Cache static assets
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache HTML files for shorter time
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Security headers for functions
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+
+# Build plugins
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+# Form handling (if needed)
+[build.processing]
+  skip_processing = false
+
+# Edge functions (if using Netlify Edge)
+[build.edge_functions]
+  directory = "netlify/edge-functions"
+
+# Development settings
+[dev]
+  command = "python -m http.server 8000 --directory netlify/dist"
+  port = 8000
+  publish = "netlify/dist"
+
+# Branch-specific settings
+[context.production]
+  command = "python scripts/build-netlify.py --production"
+
+[context.deploy-preview]
+  command = "python scripts/build-netlify.py --preview"
+
+[context.branch-deploy]
+  command = "python scripts/build-netlify.py --branch"
