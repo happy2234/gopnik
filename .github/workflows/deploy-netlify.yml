@@ -39,7 +39,7 @@ jobs:
 
     - name: Build for Netlify
       run: |
-        python scripts/build-netlify.py
+        python scripts/build-netlify-simple.py --production
 
     - name: Deploy to Netlify
       uses: nwtgck/actions-netlify@v3.0
