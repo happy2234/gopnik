@@ -1,6 +1,6 @@
 [build]
-  # Build command for static site
-  command = "python scripts/build-netlify.py"
+  # Build command for static site (simplified version)
+  command = "python scripts/build-netlify-simple.py --production"
   # Publish directory
   publish = "netlify/dist"
   # Functions directory for serverless functions
@@ -76,6 +76,11 @@
 [build.edge_functions]
   directory = "netlify/edge-functions"
 
+# Functions configuration
+[functions]
+  # Remove the invalid python_runtime configuration
+  # Python functions are handled automatically by Netlify
+
 # Development settings
 [dev]
   command = "python -m http.server 8000 --directory netlify/dist"
@@ -84,10 +89,10 @@
 
 # Branch-specific settings
 [context.production]
-  command = "python scripts/build-netlify.py --production"
+  command = "python scripts/build-netlify-simple.py --production"
 
 [context.deploy-preview]
-  command = "python scripts/build-netlify.py --preview"
+  command = "python scripts/build-netlify-simple.py --preview"
 
 [context.branch-deploy]
-  command = "python scripts/build-netlify.py --branch"
+  command = "python scripts/build-netlify-simple.py --branch"
